@@ -7,6 +7,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.get('/api', (req, res) => {
+  res.send('백엔드 api 서버')
+})
+
 //connect to mongodb
 const MONGO_URI = config.mongoDBUri;
 mongoose.connect(MONGO_URI)
