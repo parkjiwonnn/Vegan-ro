@@ -1,0 +1,11 @@
+{
+  // Set the default
+  "editor.formatOnSave": true, // 파일 저장시 자동수정 옵션
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
