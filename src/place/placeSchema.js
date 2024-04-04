@@ -12,7 +12,7 @@ const placeSchema = new mongoose.Schema(
     },
     img: {
       type: mongoose.Types.ObjectId,
-      ref: 'image',
+      ref: 'Image',
       required: true,
     },
     all_veg: {
