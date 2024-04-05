@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const reportSchema = new mongoose.Schema(
+const reportedPlaceSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -10,12 +10,12 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    img: {
+    category_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
       required: true,
     },
-    all_veg: {
+    vegan_option: {
       type: Boolean,
       required: true,
     },
@@ -40,10 +40,10 @@ const reportSchema = new mongoose.Schema(
         required: true,
       },
     },
-    hours: {
+    open_times: {
       type: String,
     },
-    url: {
+    sns_url: {
       type: String,
     },
     user_email: {
@@ -59,6 +59,6 @@ const reportSchema = new mongoose.Schema(
 
 reportSchema.index({ location: '2dsphere' });
 
-const Report = mongoose.model('Report', reportSchema);
+const ReportedPlace = mongoose.model('ReportedPlace', reportedPlaceSchema);
 
-module.exports = Report;
+module.exports = ReportedPlace;
