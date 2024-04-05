@@ -15,7 +15,7 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: {
+    author_tag: {
       type: String,
       required: true,
     },
