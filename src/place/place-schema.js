@@ -10,12 +10,12 @@ const placeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    img: {
+    category_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
       required: true,
     },
-    all_veg: {
+    vegan_option: {
       type: Boolean,
       required: true,
     },
@@ -40,10 +40,10 @@ const placeSchema = new mongoose.Schema(
         required: true,
       },
     },
-    hours: {
+    open_times: {
       type: String,
     },
-    url: {
+    sns_url: {
       type: String,
     },
   },
