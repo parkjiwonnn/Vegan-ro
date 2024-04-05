@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,linux,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,visualstudiocode,linux,macos,windows
 
+.vscode/setting.json
+.vscode/
+
 ### Linux ###
 *~
 
@@ -238,3 +241,4 @@ $RECYCLE.BIN/
 
 # eslint
 .eslintrc.js
+.vercel
