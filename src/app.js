@@ -7,7 +7,7 @@ const passportConfig = require('./passport');
 const path = require("path");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
-const cors = require("cors");
+const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
@@ -20,6 +20,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
