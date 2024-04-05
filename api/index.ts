@@ -6,8 +6,8 @@ const app = express();
 
 const PORT = config.port;
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`)
-})
+  console.log(`✅ Server is running on port ${PORT}`);
+});
 
 app.get('*', (req: VercelRequest, res: VercelResponse) => {
   res.send('Hello from Express on Vercel!');
@@ -15,5 +15,4 @@ app.get('*', (req: VercelRequest, res: VercelResponse) => {
 
 export default (req: VercelRequest, res: VercelResponse) => {
   app(req, res);
-}
-
+};
