@@ -1,31 +1,31 @@
-const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
     {
     email:  {
         type: String,
-        required: true,
+        required: false,
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
     name: {
         type: String,
-        required: true,
+        required: false,
     },
     phone: {
         type: String,
-        required: true,
+        required: false,
     },
     tag: {
         type: String,
-        required: true,
+        required: false,
     },
     img: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Image',
-        required: true,
+        required: false,
     },
     is_admin: {
         type: Boolean,
@@ -37,7 +37,11 @@ const userSchema = new Schema(
  {
     collection: "User",
   timestamps: true,
+  versionKey: false,
+
  },
 );
 
-module.exports = userSchema;
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
