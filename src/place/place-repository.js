@@ -1,4 +1,4 @@
-const { Place } = require('./place-schema');
+const Place = require('./place-schema');
 
 const placeRepository = {
   // 새로운 장소 추가
@@ -29,43 +29,49 @@ const placeRepository = {
     await newPlace.save();
     return newPlace.toObject();
   },
-  // _id로 장소 찾기
+  // id로 장소 찾기
   async findPlaceById(id) {
     const place = await Place.findById(id).lean();
     return place;
   },
-  // 장소 이름 또는 주소로 장소 찾기
-  async findPlaceByNameOrAddress(query) {
-    const place = await Place.findOne({
-      $or: [{ name: query }, { address: query }],
+  // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
+  async findPlacesByKeyword(query) {
+    const places = await Place.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { address: { $regex: query, $options: 'i' } },
+      ],
     }).lean();
-    return place;
+    return places;
   },
-  // 반경 내에 있는 장소 모두 찾기
-  async findPlacesNearby(center, radius, category) {
-    let query = {
-      location: {
+  // 조건을 만족하는 장소 모두 찾기
+  async findPlaces(centerArray, radius, category) {
+    let query = {};
+
+    if (centerArray && radius) {
+      query.location = {
         $near: {
           $geometry: {
             type: 'Point',
-            coordinates: center,
+            coordinates: centerArray,
           },
           $maxDistance: radius,
         },
-      },
-    };
+      };
+    }
 
     if (category) {
       query.category = category;
     }
 
-    const places = await Place.find(query).exec();
+    let places;
+    // 조건이 없다면 전체 데이터 가져오기
+    if (Object.keys(query).length === 0) {
+      places = await Place.find().exec();
+    } else {
+      places = await Place.find(query).exec();
+    }
     return places;
-  },
-  // 모든 장소 반환하기
-  async getAllPlaces() {
-    const allPlaces = await Place.find();
-    return allPlaces;
   },
   // 특정 id를 가진 장소 내용 덮어씌우기
   async updatePlace(
