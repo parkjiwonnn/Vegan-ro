@@ -1,18 +1,12 @@
-import express from 'express';
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import config from '../src/config';
+import { VercelRequest, VercelResponse } from '@vercel/node';
+const app = require('../src/app');
 
-const app = express();
 
-const PORT = config.port;
+const PORT = 4000;
+
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
-
-app.get('*', (req: VercelRequest, res: VercelResponse) => {
-  res.send('Hello from Express on Vercel!');
-});
-
 export default (req: VercelRequest, res: VercelResponse) => {
   app(req, res);
 };
