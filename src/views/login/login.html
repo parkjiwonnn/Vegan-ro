@@ -1,17 +1,23 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kakao Login</title>
-  </head>
 
-  <body>
-    <div class="text-center">
-      <a id="kakao" href="/auth/kakao" class="btn">카카오톡 로그인</a>
-    </div>
-    <div class="text-center">
-      <a id="kakao" href="/auth/kakao/logout" class="btn">카카오톡 로그아웃</a>
-    </div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP 정책 설정 추가 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://vercel.live;">
+  <title>Kakao Login</title>
+</head>
+
+<body>
+  <div class="text-center">
+    <!-- 로그인 아이디 변경 -->
+    <a id="kakao-login" href="/auth/kakao" class="btn">카카오톡 로그인</a>
+  </div>
+  <div class="text-center">
+    <!-- 로그아웃 아이디 변경 -->
+    <a id="kakao-logout" href="/auth/kakao/logout" class="btn">카카오톡 로그아웃</a>
+  </div>
+</body>
+
 </html>

@@ -11,13 +11,6 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ['http://localhost:3000'],
-    credentials: true,
-  }),
-);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -41,11 +34,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const viewRouter = require('./views/view-router');
-app.use('/', viewRouter); // viewRouter 미들웨어 등록
-
-app.use(viewRouter);
-
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -54,14 +42,19 @@ app.get('/api', (req, res) => {
   res.send('백엔드 api 서버');
 });
 
+const viewRouter = require('./views/view-router');
+app.use('/api/views', viewRouter); // viewRouter 미들웨어 등록
+
 passportConfig(passport);
 
 const userRouter = require('./user/user-router');
 
 app.use('/auth', userRouter);
 
-const apiRouter = require('./router/index');
+const imageRouter = require('./image/image-router');
+app.use('/api/image', imageRouter);
 
+const apiRouter = require('./router/index');
 app.use('/api', apiRouter);
 
 //connect to mongodb
