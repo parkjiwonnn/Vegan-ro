@@ -3,7 +3,9 @@ const viewRouter = express.Router();
 const path = require('path');
 require('dotenv').config(); // .env 파일에서 환경변수 로드
 
-viewRouter.get('/', servestatic('login'));
+viewRouter.use('/views', (req, res, next) => {
+  servestatic('login')(req, res, next);
+});
 
 function servestatic(resource) {
   const resourcePath = path.join(__dirname, `../views/${resource}`);
