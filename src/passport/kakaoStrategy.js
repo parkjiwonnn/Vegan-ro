@@ -2,12 +2,15 @@ const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
 const UserRepository = require('../user/user-repository');
 const jwt = require('jsonwebtoken');
+const config = require('../config');
+
+const KAKAO_ID = config.clientID;
 
 module.exports = () => {
   passport.use(
     new KakaoStrategy(
       {
-        clientID: 'ac8b0121ca4524e28175f611286173c9',
+        clientID: KAKAO_ID,
         callbackURL: '/auth/kakao/callback',
       },
 
@@ -28,9 +31,12 @@ module.exports = () => {
                 userId: exUser.userId,
               },
               process.env.JWT_SECRET,
+              {
+                expiresIn: '1h'  // 토큰의 유효 시간을 1시간으로 설정
+              }
             );
             return done(null, token);
-          } else {
+          } 
             // 새로운 사용자일 경우
             const newUser = await UserRepository.createUser({
               email: profile._json.kakao_account.email,
@@ -42,10 +48,13 @@ module.exports = () => {
                 userId: newUser.userId,
               },
               process.env.JWT_SECRET,
+              {
+                expiresIn: '1h'  // 토큰의 유효 시간을 1시간으로 설정
+              }
             );
             console.log("token : " + token);
             return done(null, token);
-          }
+          
         } catch (error) {
           console.error("Kakao login error:", error);
           return done(error);

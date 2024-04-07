@@ -1,8 +1,11 @@
 const express = require('express');
 const userRouter = express.Router();
-const userController = require('./user-controller');
-const userMiddleware = require('./user-middleware');
+const userController = require('../user/user-controller');
+const userMiddleware = require('../user/user-middleware');
 const passport = require('passport');
+const config = require('../config');
+
+const REDIRECT_URL = config.REDIRECT_URL;
 
 //* 카카오 로그인 라우터 /kakao로 요청오면, 카카오 로그인 페이지로 이동, 카카오 서버를 통해 카카오 로그인을 하면, 다음 라우터로 요청
 userRouter.get('/kakao', passport.authenticate('kakao'));
@@ -20,7 +23,7 @@ userRouter.get(
     const query = '?token=' + token;
     res.locals.token = token;
 
-    res.redirect(`http://localhost:3000${query}`);
+    res.redirect(`${REDIRECT_URL}${query}`);
   },
 );
 //회원 로그아웃
@@ -30,7 +33,7 @@ userRouter.get('/kakao/logout', (req, res) => {
       console.error(err);
       return res.redirect('/'); // 로그아웃 중 에러가 발생한 경우에 대한 처리
     }
-    res.redirect('http://localhost:3000/'); // 로그아웃 성공 시 리다이렉트
+    res.redirect(REDIRECT_URL); // 로그아웃 성공 시 리다이렉트
   });
 });
 
@@ -57,7 +60,7 @@ userRouter.patch(
 
 // 관리자 모든 회원 정보 조회
 userRouter.get(
-  '/admin/user',
+  '/admin/users',
   userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   userController.getUsers,
@@ -65,7 +68,7 @@ userRouter.get(
 
 // 관리자 회원 정보 삭제
 userRouter.delete(
-  '/admin/user/:userId',
+  '/admin/users/:userId',
   userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   userController.deleteUser,
