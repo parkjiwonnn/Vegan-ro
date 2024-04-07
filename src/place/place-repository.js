@@ -45,7 +45,7 @@ const placeRepository = {
   },
 
   // 조건을 만족하는 장소 모두 찾기
-  async findPlaces(center, radius, category) {
+  async findPlaces(center, radius, category, vegan_option) {
     let query = {};
 
     if (center && radius) {
@@ -64,6 +64,10 @@ const placeRepository = {
 
     if (category) {
       query.category = category;
+    }
+
+    if (vegan_option) {
+      query.vegan_option = vegan_option;
     }
 
     let places;
@@ -91,18 +95,22 @@ const placeRepository = {
       sns_url,
     },
   ) {
-    const updatedPlace = await Place.findByIdAndUpdate(id, {
-      name,
-      category,
-      category_img,
-      vegan_option,
-      tel,
-      address,
-      address_detail,
-      location,
-      open_times,
-      sns_url,
-    }).lean();
+    const updatedPlace = await Place.findByIdAndUpdate(
+      id,
+      {
+        name,
+        category,
+        category_img,
+        vegan_option,
+        tel,
+        address,
+        address_detail,
+        location,
+        open_times,
+        sns_url,
+      },
+      { new: true },
+    ).lean();
     return updatedPlace;
   },
   // 특정 id를 가진 장소 삭제

@@ -7,6 +7,7 @@ const placeService = {
   async createPlace({
     name,
     category,
+    category_img,
     vegan_option,
     tel,
     address,
@@ -16,15 +17,19 @@ const placeService = {
     sns_url,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
+    const newLocation = {
+      type: 'Point',
+      coordinates: location,
+    };
     const newPlace = await placeRepository.createPlace({
       name,
       category,
-      // category_img,
+      category_img,
       vegan_option,
       tel,
       address,
       address_detail,
-      location,
+      location: newLocation,
       open_times,
       sns_url,
     });
@@ -66,7 +71,7 @@ const placeService = {
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getPlaces(center, radius, category) {
+  async getPlaces(center, radius, category, vegan_option) {
     if ((center && !radius) || (!center && radius)) {
       throw new AppError(
         commonErrors.invalidRequestError,
@@ -75,7 +80,12 @@ const placeService = {
       );
     }
 
-    const places = await placeRepository.findPlaces(center, radius, category);
+    const places = await placeRepository.findPlaces(
+      center,
+      radius,
+      category,
+      vegan_option,
+    );
     if (places.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
