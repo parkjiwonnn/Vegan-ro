@@ -42,20 +42,15 @@ app.get('/api', (req, res) => {
   res.send('백엔드 api 서버');
 });
 
-const viewRouter = require('./views/view-router');
-app.use('/api/views', viewRouter); // viewRouter 미들웨어 등록
 
-passportConfig(passport);
-
-const userRouter = require('./user/user-router');
-
-app.use('/auth', userRouter);
-
-const imageRouter = require('./image/image-router');
-app.use('/api/image', imageRouter);
 
 const apiRouter = require('./router/index');
+const userRouter = require('./router/user-router');
+
 app.use('/api', apiRouter);
+app.use('/auth', userRouter);
+
+passportConfig(passport);
 
 //connect to mongodb
 const MONGO_URI = config.mongoDBUri;
