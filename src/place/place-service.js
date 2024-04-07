@@ -44,7 +44,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     // 현재 위치와의 거리 계산 결과 같이 반환하기
@@ -67,12 +67,15 @@ const placeService = {
   },
   // 조건을 만족하는 장소 모두 가져오기
   async getPlaces(center, radius, category) {
-    const centerArray = center.split(',').map(Number);
-    const places = await placeRepository.findPlaces(
-      centerArray,
-      radius,
-      category,
-    );
+    if ((center && !radius) || (!center && radius)) {
+      throw new AppError(
+        commonErrors.invalidRequestError,
+        '거리 검색을 위해서는 center와 radius 모두 필요합니다',
+        400,
+      );
+    }
+
+    const places = await placeRepository.findPlaces(center, radius, category);
     if (places.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -116,7 +119,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     return { message: '정상적으로 수정되었습니다.', updatedPlace };
@@ -128,7 +131,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     return { message: '정상적으로 삭제되었습니다.', deletedPlace };

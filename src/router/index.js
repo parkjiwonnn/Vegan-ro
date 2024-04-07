@@ -1,5 +1,8 @@
 const placeRouter = require('./place-router');
 
-module.exports = {
-  placeRouter,
-};
+const express = require('express');
+const apiRouter = express.Router();
+
+apiRouter.use('/', placeRouter);
+
+module.exports = apiRouter;
