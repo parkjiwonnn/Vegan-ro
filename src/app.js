@@ -60,6 +60,10 @@ const userRouter = require('./user/user-router');
 
 app.use('/auth', userRouter);
 
+const placeRouter = require('./router/place-router');
+
+app.use('/api', placeRouter);
+
 //connect to mongodb
 const MONGO_URI = config.mongoDBUri;
 mongoose.connect(MONGO_URI);
