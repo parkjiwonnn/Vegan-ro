@@ -31,37 +31,43 @@ const placeRepository = {
   },
   // id로 장소 찾기
   async findPlaceById(id) {
-    const place = await Place.findById(id).lean();
-    return place;
+    return await Place.findById(id).lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
   async findPlacesByKeyword(query) {
-    const places = await Place.find({
+    return await Place.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { address: { $regex: query, $options: 'i' } },
+        { address_detail: { $regex: query, $options: 'i' } },
       ],
     }).lean();
-    return places;
   },
+
   // 조건을 만족하는 장소 모두 찾기
-  async findPlaces(centerArray, radius, category) {
+  async findPlaces(center, radius, category, vegan_option) {
     let query = {};
 
-    if (centerArray && radius) {
+    if (center && radius) {
+      const centerArray = center.split(',').map(Number);
+      const radiusInMeters = radius * 1000; // 킬로미터를 미터로 변환
       query.location = {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: centerArray,
           },
-          $maxDistance: radius,
+          $maxDistance: radiusInMeters,
         },
       };
     }
 
     if (category) {
       query.category = category;
+    }
+
+    if (vegan_option) {
+      query.vegan_option = vegan_option;
     }
 
     let places;
@@ -89,18 +95,22 @@ const placeRepository = {
       sns_url,
     },
   ) {
-    const updatedPlace = await Place.findByIdAndUpdate(id, {
-      name,
-      category,
-      category_img,
-      vegan_option,
-      tel,
-      address,
-      address_detail,
-      location,
-      open_times,
-      sns_url,
-    }).lean();
+    const updatedPlace = await Place.findByIdAndUpdate(
+      id,
+      {
+        name,
+        category,
+        category_img,
+        vegan_option,
+        tel,
+        address,
+        address_detail,
+        location,
+        open_times,
+        sns_url,
+      },
+      { new: true },
+    ).lean();
     return updatedPlace;
   },
   // 특정 id를 가진 장소 삭제
