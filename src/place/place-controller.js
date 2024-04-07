@@ -16,12 +16,17 @@ const placeController = {
   // 장소 필터링 GET
   async getPlaces(req, res, next) {
     try {
-      const { center, radius, category, search } = req.query;
+      const { center, radius, category, vegan_option, search } = req.query;
       let places;
       if (search) {
         places = await placeService.getPlacesByKeyword(search);
       } else {
-        places = await placeService.getPlaces(center, radius, category);
+        places = await placeService.getPlaces(
+          center,
+          radius,
+          category,
+          vegan_option,
+        );
       }
       res.json(responseFormat.buildResponse(places));
     } catch (error) {
@@ -35,6 +40,7 @@ const placeController = {
       const {
         name,
         category,
+        category_img,
         vegan_option,
         tel,
         address,
@@ -46,6 +52,7 @@ const placeController = {
       const newPlace = await placeService.createPlace({
         name,
         category,
+        category_img,
         vegan_option,
         tel,
         address,
