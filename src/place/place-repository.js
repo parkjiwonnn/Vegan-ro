@@ -31,31 +31,33 @@ const placeRepository = {
   },
   // id로 장소 찾기
   async findPlaceById(id) {
-    const place = await Place.findById(id).lean();
-    return place;
+    return await Place.findById(id).lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
   async findPlacesByKeyword(query) {
-    const places = await Place.find({
+    return await Place.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { address: { $regex: query, $options: 'i' } },
+        { address_detail: { $regex: query, $options: 'i' } },
       ],
     }).lean();
-    return places;
   },
+
   // 조건을 만족하는 장소 모두 찾기
-  async findPlaces(centerArray, radius, category) {
+  async findPlaces(center, radius, category) {
     let query = {};
 
-    if (centerArray && radius) {
+    if (center && radius) {
+      const centerArray = center.split(',').map(Number);
+      const radiusInMeters = radius * 1000; // 킬로미터를 미터로 변환
       query.location = {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: centerArray,
           },
-          $maxDistance: radius,
+          $maxDistance: radiusInMeters,
         },
       };
     }
