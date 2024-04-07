@@ -1,31 +1,60 @@
 const User = require('./user-schema');
 
-const UserRepository = {
-  findUserById: async (id) => {
+class UserRepository {
+  
+  async findUserById(id) {
     try {
-      const user = await User.findById(id);
+      const user = await User.findById(id).lean();
       return user;
     } catch (error) {
       throw new Error(error);
     }
-  },
+  }
 
-  findUserOne: async (where) => {
+  async findUserOne(where) {
     try {
-      const user = await User.findOne({ where });
+      const user = await User.findOne(where).lean();
       return user;
     } catch (error) {
       throw new Error(error);
     }
-  },
-  createUser: async (data) => {
+  }
+
+  async createUser(data) {
     try {
       const newUser = await User.create(data);
-      return newUser;
+      return newUser.toObject();
     } catch (error) {
       throw new Error(error);
     }
-  },
-};
+  }
 
-module.exports = UserRepository;
+  async updateByEmail(email, data) {
+    try {
+      const updatedUser = await User.findOneAndUpdate({ email }, data, { new: true }).lean();
+      return updatedUser;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async deleteByEmail(email) {
+    try {
+      const deletedUser = await User.findOneAndDelete({ email }).lean();
+      return deletedUser;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async allUsers() {
+    try {
+      const users = await User.find({}).lean();
+      return users;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+}
+
+module.exports = new UserRepository();

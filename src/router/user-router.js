@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
-const userController = require('./user-controller');
-const userMiddleware = require('./user-middleware');
+const userController = require('../user/user-controller');
+const userMiddleware = require('../user/user-middleware');
 const passport = require('passport');
 const config = require('../config');
 

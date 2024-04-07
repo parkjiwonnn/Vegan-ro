@@ -1,11 +1,11 @@
 const express = require('express');
 const imageRouter = express.Router();
-const imageService = require('./image-service');
-const Image = require('./image-schema');
+const imageService = require('../image/image-service');
+const Image = require('../image/image-schema');
 
 // 전체 이미지 조회
 imageRouter.get(
-  '/',
+  '/images',
   async (req, res, next) => {
     try {
       const images = await imageService.getAll();
