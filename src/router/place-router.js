@@ -36,3 +36,5 @@ placeRouter.delete(
   // adminMiddleware
   placeController.deletePlace,
 );
+
+module.exports = placeRouter;
