@@ -58,9 +58,21 @@ const reportedPlaceService = {
     return reportedPlace;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getReportedPlaces(user_email) {
-    const reportedPlaces =
-      await reportedPlaceRepository.findReportedPlaces(user_email);
+  async getReportedPlaces() {
+    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces();
+    if (reportedPlaces.length === 0) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 조건을 만족하는 제보가 존재하지 않습니다',
+        404,
+      );
+    }
+    return reportedPlaces;
+  },
+  async getReportedPlacesByUser(user_email) {
+    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces({
+      user_email,
+    });
     if (reportedPlaces.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,

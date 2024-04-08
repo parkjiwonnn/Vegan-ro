@@ -3,8 +3,14 @@ const reportedPlaceController = require('../report/report-controller');
 
 const reportedPlaceRouter = express.Router();
 
+// GET /reports/:reportedPlaceId
+reportedPlaceRouter.get('/reports', reportedPlaceController.getReportedPlace);
+
 // GET /reports/me
-reportedPlaceRouter.get('/reports', reportedPlaceController.getReportedPlaces);
+reportedPlaceRouter.get(
+  '/reports',
+  reportedPlaceController.getReportedPlacesByUser,
+);
 
 // GET /admin/reports
 reportedPlaceRouter.get(

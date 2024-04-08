@@ -13,12 +13,21 @@ const reportedPlaceController = {
       next(error);
     }
   },
-  // 제보 장소 전체, 유저 필터링 GET
+  // 제보 장소 전체, 필터링 GET
   async getReportedPlaces(req, res, next) {
+    try {
+      const reportedPlaces = await reportedPlaceService.getReportedPlaces();
+      res.json(responseFormat.buildResponse(reportedPlaces));
+    } catch (error) {
+      next(error);
+    }
+  },
+  // 유저의 제보 장소 모두 가져오기 GET
+  async getReportedPlacesByUser(req, res, next) {
     try {
       // const user_email = res.locals.token.email;
       const reportedPlaces =
-        await reportedPlaceService.getReportedPlaces(user_email);
+        await reportedPlaceService.getReportedPlacesByUser(user_email);
       res.json(responseFormat.buildResponse(reportedPlaces));
     } catch (error) {
       next(error);

@@ -36,13 +36,7 @@ const reportedPlaceRepository = {
     return await ReportedPlace.findById(id).lean();
   },
   // 조건을 만족하는 제보된 장소 모두 찾기
-  async findReportedPlaces(user_email) {
-    let query = {};
-
-    if (user_email) {
-      query.user_email = user_email;
-    }
-
+  async findReportedPlaces(query) {
     let reportedPlaces;
     // 조건이 없다면 전체 데이터 가져오기
     if (Object.keys(query).length === 0) {
