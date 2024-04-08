@@ -2,17 +2,18 @@ const reviewService = require('./review-service');
 const responseFormat = require('../errors/responseFormat');
 
 const reviewController = {
-  // 특정 리뷰 GET
-  async getReview(req, res, next) {
+  // 유저의 리뷰 모두 보기 GET
+  async getReviewsByUser(req, res, next) {
     try {
-      const { reviewId } = req.params;
-      const review = await reviewService.getReview(reviewId);
+      const review = await reviewService.getReviewsByUser(
+        res.locals.token.email,
+      );
       res.json(responseFormat.buildResponse(review));
     } catch (error) {
       next(error);
     }
   },
-  // 리뷰 필터링 GET
+  // 장소의 리뷰 모두 보기 GET
   async getReviews(req, res, next) {
     try {
       const { placeId } = req.query;

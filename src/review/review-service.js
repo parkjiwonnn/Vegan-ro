@@ -5,8 +5,8 @@ const commonErrors = require('../errors/commonErrors.js');
 const reviewService = {
   // 새로운 리뷰 등록
   async createReview({ place_id, content, user_email }) {
-    const userInfo = userRepository.findByEmail(user_email);
-    const newReview = await reviewRepository.createPlace({
+    const userInfo = await userRepository.findByEmail(user_email);
+    const newReview = await reviewRepository.createReview({
       place_id,
       content,
       author: userInfo.nickname,
@@ -21,26 +21,36 @@ const reviewService = {
     }
     return { message: '정상적으로 등록되었습니다.', newReview };
   },
-  // 특정 id를 가진 리뷰 가져오기
-  async getReview(id) {
-    const review = await reviewRepository.findReviewById(id);
-    if (review === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 id를 갖는 장소가 없습니다.',
-        400,
-      );
-    }
-    return review;
-  },
-  // 조건을 만족하는 리뷰 모두 가져오기
-  async getReviews(author, place_id) {
-    const reviews = await reviewRepository.findPlaces(author, place_id);
+  // 장소의 리뷰 모두 가져오기
+  async getReviews(place_id) {
+    const reviews = await reviewRepository.findReviews({ place_id });
     if (reviews.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 조건을 만족하는 리뷰가 존재하지 않습니다',
-        404,
+        400,
+      );
+    }
+    return reviews;
+  },
+  // 유저의 리뷰 모두 가져오기
+  async getReviewsByUser(user_email) {
+    const userInfo = await userRepository.findByEmail(user_email);
+    if (!userInfo) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '사용자 정보를 찾을 수 없습니다',
+        400,
+      );
+    }
+    const reviews = await reviewRepository.findReviews({
+      author: userInfo.nickname,
+    });
+    if (reviews.length === 0) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 조건을 만족하는 리뷰가 존재하지 않습니다',
+        400,
       );
     }
     return reviews;
