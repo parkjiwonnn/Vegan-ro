@@ -11,6 +11,15 @@ const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
+
+// app.use(
+//   cors({
+//     origin: ['https://veganro-backend.vercel.app', 'http://localhost:4000','https://veganro-frontend.vercel.app'],
+//     credentials: true,
+//   }),
+// );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -41,8 +50,6 @@ app.get('/', (req, res) => {
 app.get('/api', (req, res) => {
   res.send('백엔드 api 서버');
 });
-
-
 
 const apiRouter = require('./router/index');
 const userRouter = require('./router/user-router');

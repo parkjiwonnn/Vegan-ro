@@ -4,6 +4,7 @@ const userController = require('../user/user-controller');
 const userMiddleware = require('../user/user-middleware');
 const passport = require('passport');
 const config = require('../config');
+const errors = require('../errors/responseFormat');
 
 const REDIRECT_URL = config.REDIRECT_URL;
 
@@ -23,7 +24,7 @@ userRouter.get(
     const query = '?token=' + token;
     res.locals.token = token;
 
-    res.redirect(`${REDIRECT_URL}${query}`);
+    res.status(201).json(errors.buildResponse({ token: `Bearer ${token}` }));
   },
 );
 //회원 로그아웃
@@ -36,6 +37,12 @@ userRouter.get('/kakao/logout', (req, res) => {
     res.redirect(REDIRECT_URL); // 로그아웃 성공 시 리다이렉트
   });
 });
+
+// 회원가입
+userRouter.post('/signup', userController.createUser);
+
+// 로그인
+userRouter.post('/login', userController.postSignIn);
 
 // 회원 정보 조회
 userRouter.get(
@@ -57,6 +64,9 @@ userRouter.patch(
   userMiddleware.isAuthenticated,
   userController.patchUserInfo,
 );
+
+//관리자 페이지 접근
+userRouter.get('/admin', userMiddleware.isAdmin);
 
 // 관리자 모든 회원 정보 조회
 userRouter.get(
