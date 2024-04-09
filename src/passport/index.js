@@ -1,7 +1,7 @@
 const passport = require('passport');
 const kakao = require('./kakaoStrategy'); // 카카오서버로 로그인할때
 const jwt = require('jsonwebtoken');
-const User = require('../user/user-schema');
+const User = require('../user/user-repository');
 const config = require('../config');
 
 const JWT_SECRET = config.JWT_SECRET;
