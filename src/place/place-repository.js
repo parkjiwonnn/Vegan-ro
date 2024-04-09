@@ -9,6 +9,7 @@ const placeRepository = {
     vegan_option,
     tel,
     address,
+    address_lot_number,
     address_detail,
     location,
     open_times,
@@ -21,6 +22,7 @@ const placeRepository = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -31,31 +33,43 @@ const placeRepository = {
   },
   // id로 장소 찾기
   async findPlaceById(id) {
-    const place = await Place.findById(id).lean();
-    return place;
+    return await Place.findById(id).populate('category_img').lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
   async findPlacesByKeyword(query) {
-    const places = await Place.find({
+    return await Place.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { address: { $regex: query, $options: 'i' } },
+        { address_lot_number: { $regex: query, $options: 'i' } },
+        { address_detail: { $regex: query, $options: 'i' } },
       ],
-    }).lean();
-    return places;
+    })
+      .populate('category_img')
+      .lean();
   },
+
   // 조건을 만족하는 장소 모두 찾기
-  async findPlaces(centerArray, radius, category) {
+  async findPlaces(
+    center,
+    radius,
+    pageNumber,
+    pageSize,
+    category,
+    vegan_option,
+  ) {
     let query = {};
 
-    if (centerArray && radius) {
+    if (center && radius) {
+      const centerArray = center.split(',').map(Number);
+      const radiusInMeters = radius * 1000; // 킬로미터를 미터로 변환
       query.location = {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: centerArray,
           },
-          $maxDistance: radius,
+          $maxDistance: radiusInMeters,
         },
       };
     }
@@ -64,12 +78,24 @@ const placeRepository = {
       query.category = category;
     }
 
+    if (vegan_option) {
+      query.vegan_option = vegan_option;
+    }
+
     let places;
     // 조건이 없다면 전체 데이터 가져오기
     if (Object.keys(query).length === 0) {
-      places = await Place.find().exec();
+      places = await Place.find()
+        .populate('category_img')
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     } else {
-      places = await Place.find(query).exec();
+      places = await Place.find(query)
+        .populate('category_img')
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     }
     return places;
   },
@@ -83,29 +109,39 @@ const placeRepository = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
       sns_url,
     },
   ) {
-    const updatedPlace = await Place.findByIdAndUpdate(id, {
-      name,
-      category,
-      category_img,
-      vegan_option,
-      tel,
-      address,
-      address_detail,
-      location,
-      open_times,
-      sns_url,
-    }).lean();
+    const updatedPlace = await Place.findByIdAndUpdate(
+      id,
+      {
+        name,
+        category,
+        category_img,
+        vegan_option,
+        tel,
+        address,
+        address_lot_number,
+        address_detail,
+        location,
+        open_times,
+        sns_url,
+      },
+      { new: true },
+    )
+      .populate('category_img')
+      .lean();
     return updatedPlace;
   },
   // 특정 id를 가진 장소 삭제
   async deletePlace(id) {
-    const deletedPlace = await Place.findByIdAndDelete(id).lean();
+    const deletedPlace = await Place.findByIdAndDelete(id)
+      .populate('category_img')
+      .lean();
     return deletedPlace;
   },
 };

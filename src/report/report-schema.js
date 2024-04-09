@@ -21,6 +21,7 @@ const reportedPlaceSchema = new mongoose.Schema(
     },
     tel: {
       type: String,
+      default: '',
     },
     address: {
       type: String,
@@ -28,6 +29,7 @@ const reportedPlaceSchema = new mongoose.Schema(
     },
     address_detail: {
       type: String,
+      default: '',
     },
     location: {
       type: {
@@ -42,9 +44,11 @@ const reportedPlaceSchema = new mongoose.Schema(
     },
     open_times: {
       type: String,
+      default: '',
     },
     sns_url: {
       type: String,
+      default: '',
     },
     user_email: {
       type: String,
@@ -57,7 +61,7 @@ const reportedPlaceSchema = new mongoose.Schema(
   },
 );
 
-reportSchema.index({ location: '2dsphere' });
+//reportSchema.index({ location: '2dsphere' });
 
 const ReportedPlace = mongoose.model('ReportedPlace', reportedPlaceSchema);
 

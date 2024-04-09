@@ -4,32 +4,35 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: false,
+      required: true,
     },
     password: {
       type: String,
-      required: false,
+      default: null,
     },
     name: {
       type: String,
-      required: false,
+      default: null,
     },
     nickname: {
       type: String,
-      required: false,
+      required: true,
     },
     phone: {
       type: String,
-      required: false,
+      default: null,
     },
     tag: {
       type: String,
-      required: false,
     },
-    img: {
+    tag_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
-      required: false,
+    },
+    complaint: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     is_admin: {
       type: Boolean,
@@ -39,7 +42,6 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    collection: 'User',
     timestamps: true,
     versionKey: false,
   },

@@ -7,24 +7,31 @@ const placeService = {
   async createPlace({
     name,
     category,
+    category_img,
     vegan_option,
     tel,
     address,
+    address_lot_number,
     address_detail,
     location,
     open_times,
     sns_url,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
+    const newLocation = {
+      type: 'Point',
+      coordinates: location,
+    };
     const newPlace = await placeRepository.createPlace({
       name,
       category,
-      // category_img,
+      category_img,
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
-      location,
+      location: newLocation,
       open_times,
       sns_url,
     });
@@ -44,7 +51,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     // 현재 위치와의 거리 계산 결과 같이 반환하기
@@ -66,12 +73,29 @@ const placeService = {
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getPlaces(center, radius, category) {
-    const centerArray = center.split(',').map(Number);
+  async getPlaces(
+    center,
+    radius,
+    pageNumber,
+    pageSize,
+    category,
+    vegan_option,
+  ) {
+    if ((center && !radius) || (!center && radius)) {
+      throw new AppError(
+        commonErrors.invalidRequestError,
+        '거리 검색을 위해서는 center와 radius 모두 필요합니다',
+        400,
+      );
+    }
+
     const places = await placeRepository.findPlaces(
-      centerArray,
+      center,
       radius,
+      pageNumber,
+      pageSize,
       category,
+      vegan_option,
     );
     if (places.length === 0) {
       throw new AppError(
@@ -94,6 +118,7 @@ const placeService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -107,6 +132,7 @@ const placeService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -116,7 +142,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     return { message: '정상적으로 수정되었습니다.', updatedPlace };
@@ -128,7 +154,7 @@ const placeService = {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     return { message: '정상적으로 삭제되었습니다.', deletedPlace };
