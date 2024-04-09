@@ -11,17 +11,14 @@ const reportedPlaceService = {
     vegan_option,
     tel,
     address,
+    address_lot_number,
     address_detail,
     location,
     open_times,
     sns_url,
-    user_email,
+    user_id,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
-    const newLocation = {
-      type: 'Point',
-      coordinates: location,
-    };
     const newReportedPlace = await reportedPlaceRepository.createReportedPlace({
       name,
       category,
@@ -29,11 +26,12 @@ const reportedPlaceService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
-      location: newLocation,
+      location,
       open_times,
       sns_url,
-      user_email,
+      user_id,
     });
     if (newReportedPlace === null) {
       throw new AppError(
@@ -58,8 +56,11 @@ const reportedPlaceService = {
     return reportedPlace;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getReportedPlaces() {
-    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces();
+  async getReportedPlaces(pageNumber, pageSize) {
+    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
+      pageNumber,
+      pageSize,
+    );
     if (reportedPlaces.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -69,10 +70,12 @@ const reportedPlaceService = {
     }
     return reportedPlaces;
   },
-  async getReportedPlacesByUser(user_email) {
-    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces({
-      user_email,
-    });
+  async getReportedPlacesByUser(pageNumber, pageSize, user_id) {
+    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
+      pageNumber,
+      pageSize,
+      user_id,
+    );
     if (reportedPlaces.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -92,11 +95,12 @@ const reportedPlaceService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
       sns_url,
-      user_email,
+      user_id,
     },
   ) {
     const updatedReportedPlace =
@@ -107,11 +111,12 @@ const reportedPlaceService = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
         sns_url,
-        user_email,
+        user_id,
       });
     if (updatedReportedPlace === null) {
       throw new AppError(
