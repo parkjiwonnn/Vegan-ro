@@ -17,25 +17,34 @@ const reviewRepository = {
     return await Review.findById(id).lean();
   },
   // 조건을 만족하는 리뷰 모두 찾기
-  async findReviews(query) {
+  async findReviews(pageNumber, pageSize, place_id) {
+    let query = {};
+
+    if (place_id) {
+      query.place_id = place_id;
+    }
+
     let reviews;
     // 조건이 없다면 전체 데이터 가져오기
     if (Object.keys(query).length === 0) {
-      reviews = await Review.find().exec();
+      reviews = await Review.find()
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     } else {
-      reviews = await Review.find(query).exec();
+      reviews = await Review.find(query)
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     }
     return reviews;
   },
   // 특정 id를 가진 리뷰 내용 덮어씌우기
-  async updateReview(id, { place_id, content, author, author_tag }) {
+  async updateReview(id, content) {
     const updatedReview = await Review.findByIdAndUpdate(
       id,
       {
-        place_id,
         content,
-        author,
-        author_tag,
       },
       { new: true },
     ).lean();
