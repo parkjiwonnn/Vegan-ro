@@ -5,8 +5,11 @@ const reviewController = {
   // 유저의 리뷰 모두 보기 GET
   async getReviewsByUser(req, res, next) {
     try {
+      const { pageNumber, pageSize } = req.query;
       const review = await reviewService.getReviewsByUser(
-        res.locals.token.email,
+        req.user.userId,
+        pageNumber,
+        pageSize,
       );
       res.json(responseFormat.buildResponse(review));
     } catch (error) {
@@ -16,8 +19,12 @@ const reviewController = {
   // 장소의 리뷰 모두 보기 GET
   async getReviews(req, res, next) {
     try {
-      const { placeId } = req.query;
-      const reviews = await reviewService.getReviews(placeId);
+      const { pageNumber, pageSize, place_id } = req.query;
+      const reviews = await reviewService.getReviews(
+        pageNumber,
+        pageSize,
+        place_id,
+      );
       res.json(responseFormat.buildResponse(reviews));
     } catch (error) {
       next(error);
@@ -30,7 +37,7 @@ const reviewController = {
       const newReview = await reviewService.createReview({
         place_id,
         content,
-        user_email: res.locals.token.email,
+        user_id: req.user.userId,
       });
       res.json(responseFormat.buildResponse(newReview));
     } catch (error) {
@@ -38,16 +45,11 @@ const reviewController = {
     }
   },
   // 리뷰 수정 PUT
-  async putReview(req, res, next) {
+  async patchReview(req, res, next) {
     try {
       const { reviewId } = req.params;
-      const { place_id, content, author, author_tag } = req.body;
-      const updatedReview = await reviewService.updateReview(reviewId, {
-        place_id,
-        content,
-        author,
-        author_tag,
-      });
+      const { content } = req.body;
+      const updatedReview = await reviewService.updateReview(reviewId, content);
       res.json(responseFormat.buildResponse(updatedReview));
     } catch (error) {
       next(error);

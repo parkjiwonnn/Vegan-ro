@@ -1,19 +1,20 @@
 const express = require('express');
 const reviewController = require('../review/review-controller');
+const userMiddleware = require('../middleware/user-middleware');
 
 const reviewRouter = express.Router();
 
-// GET /reviews/me
+// GET /reviews/me?pageNumber=number&pageSize=number
 reviewRouter.get(
   '/reviews/me',
-  // userMiddleware
+  userMiddleware.isAuthenticated,
   reviewController.getReviewsByUser,
 );
 
-// GET /reviews?placeId={placeId}
+// GET /reviews?placeId=value&pageNumber=number&pageSize=number
 reviewRouter.get('/reviews', reviewController.getReviews);
 
-// GET /admin/reviews
+// GET /admin/reviews?pageNumber=number&pageSize=number
 reviewRouter.get(
   '/admin/reviews',
   // adminMiddleware
@@ -23,21 +24,21 @@ reviewRouter.get(
 // POST /reviews
 reviewRouter.post(
   '/reviews',
-  // userMiddleware
+  userMiddleware.isAuthenticated,
   reviewController.postReview,
 );
 
-// PUT /reviews/:reviewId
-reviewRouter.put(
+// PATCH /reviews/:reviewId
+reviewRouter.patch(
   '/reviews/:reviewId',
-  // userMiddleware
-  reviewController.putReview,
+  userMiddleware.isAuthenticated,
+  reviewController.patchReview,
 );
 
 // DELETE /reviews/:reviewId
 reviewRouter.delete(
   '/reviews/:reviewId',
-  // userMiddleware
+  userMiddleware.isAuthenticated,
   reviewController.deleteReiview,
 );
 
