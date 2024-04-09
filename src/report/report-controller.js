@@ -13,10 +13,14 @@ const reportedPlaceController = {
       next(error);
     }
   },
-  // 제보 장소 전체, 필터링 GET
+  // 제보 장소 전체 GET
   async getReportedPlaces(req, res, next) {
     try {
-      const reportedPlaces = await reportedPlaceService.getReportedPlaces();
+      const { pageNumber, pageSize } = req.query;
+      const reportedPlaces = await reportedPlaceService.getReportedPlaces(
+        pageNumber,
+        pageSize,
+      );
       res.json(responseFormat.buildResponse(reportedPlaces));
     } catch (error) {
       next(error);
@@ -25,9 +29,13 @@ const reportedPlaceController = {
   // 유저의 제보 장소 모두 가져오기 GET
   async getReportedPlacesByUser(req, res, next) {
     try {
-      // const user_email = res.locals.token.email;
-      const reportedPlaces =
-        await reportedPlaceService.getReportedPlacesByUser(user_email);
+      const { pageNumber, pageSize } = req.query;
+      const user_id = req.user.userId;
+      const reportedPlaces = await reportedPlaceService.getReportedPlacesByUser(
+        pageNumber,
+        pageSize,
+        user_id,
+      );
       res.json(responseFormat.buildResponse(reportedPlaces));
     } catch (error) {
       next(error);
@@ -39,26 +47,30 @@ const reportedPlaceController = {
       const {
         name,
         category,
+        category_img,
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
         sns_url,
       } = req.body;
-      // const user_email = res.locals.token.email;
+      const user_id = req.user.userId;
       const newReportedPlace = await reportedPlaceService.createReportedPlace({
         name,
         category,
+        category_img,
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
         sns_url,
-        user_email,
+        user_id,
       });
       res.json(responseFormat.buildResponse(newReportedPlace));
     } catch (error) {
@@ -76,12 +88,13 @@ const reportedPlaceController = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
         sns_url,
       } = req.body;
-      // const user_email = res.locals.token.email;
+      const user_id = req.user.userId;
       const updatedReportedPlace =
         await reportedPlaceService.updateReportedPlace(reportedPlaceId, {
           name,
@@ -90,11 +103,12 @@ const reportedPlaceController = {
           vegan_option,
           tel,
           address,
+          address_lot_number,
           address_detail,
           location,
           open_times,
           sns_url,
-          user_email,
+          user_id,
         });
       res.json(responseFormat.buildResponse(updatedReportedPlace));
     } catch (error) {

@@ -28,8 +28,7 @@ const authenticate = (req, res, next) => {
 };
 
 const isAuthenticated = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = req.headers['authorization'].slice(7);
 
   if (token == null) {
     return res
