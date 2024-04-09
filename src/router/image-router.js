@@ -1,7 +1,7 @@
 const express = require('express');
 const imageRouter = express.Router();
 const imageController = require('../image/image-controller');
-const userMiddleware = require('../user/user-middleware');
+const userMiddleware = require('../middleware/user-middleware');
 
 
 //admin 경로에 미들웨어 적용

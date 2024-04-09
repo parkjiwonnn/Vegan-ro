@@ -1,7 +1,7 @@
 const express = require("express");
 const bookmarkRouter = express.Router();
 const bookmarkController = require('../bookmark/bookmark-controller');
-const userMiddleware = require('../user/user-middleware');
+const userMiddleware = require('../middleware/user-middleware');
 
 
 // 북마크 전체 조회 (유저)
