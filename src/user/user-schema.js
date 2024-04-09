@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+      default: null,
     },
     nickname: {
       type: String,
@@ -20,12 +20,12 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: true,
+      default: null,
     },
     tag: {
       type: String,
     },
-    img: {
+    tag_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
     },

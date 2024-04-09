@@ -27,15 +27,15 @@ class UserRepository {
   }
   async createUser(data) {
     try {
-      const { email, name, nickname, phone } = data; // data 객체에서 필요한 속성 추출
+      const { email, nickname } = data; // data 객체에서 필요한 속성 추출
       const newUser = await User.create({
         email,
         password: null, // 비밀번호는 특별한 처리 과정을 거쳐야 할 수 있으니, 이 부분은 주의해서 다루어야 합니다.
-        name,
+        name:null,
         nickname,
-        phone,
+        phone:null,
         tag: null,
-        img: null,
+        tag_img: null,
         is_admin: false, // 기본값 설정
         complaint: 0,
         deleted_at: null, // 기본값 설정

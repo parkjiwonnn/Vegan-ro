@@ -38,7 +38,7 @@ class UserService {
   }
 
   // 회원정보수정
-  async updateUserInfo(email, { nickname, tag, img }) {
+  async updateUserInfo(email, { nickname, tag, tag_img }) {
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
@@ -52,7 +52,7 @@ class UserService {
     const updatedUserInfo = await userRepository.updateByEmail(email, {
       nickname,
       tag,
-      img,
+      tag_img,
     });
 
     return {

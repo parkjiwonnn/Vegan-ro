@@ -17,7 +17,7 @@ const userController = {
         nickname,
         phone,
         tag,
-        img,
+        tag_img,
         is_admin,
         complaint,
         deleted_at,
@@ -29,7 +29,7 @@ const userController = {
         nickname,
         phone,
         tag,
-        img,
+        tag_img,
         is_admin,
         complaint,
         deleted_at,
@@ -69,11 +69,11 @@ const userController = {
   async putUserInfo(req, res, next) {
     try {
       const email = req.user.email;
-      const { nickname, tag, img } = req.body;
+      const { nickname, tag, tag_img } = req.body;
       const user = await userService.updateUserInfo(email, {
         nickname,
         tag,
-        img,
+        tag_img,
       });
       res.json(errors.buildResponse(user));
     } catch (error) {

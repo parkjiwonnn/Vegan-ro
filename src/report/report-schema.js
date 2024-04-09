@@ -61,7 +61,7 @@ const reportedPlaceSchema = new mongoose.Schema(
   },
 );
 
-reportSchema.index({ location: '2dsphere' });
+//reportSchema.index({ location: '2dsphere' });
 
 const ReportedPlace = mongoose.model('ReportedPlace', reportedPlaceSchema);
 

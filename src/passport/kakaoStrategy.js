@@ -33,9 +33,9 @@ module.exports = () => {
                 name: exUser.name,
               },
               JWT_SECRET,
-              {
-                expiresIn: '24h',
-              },
+              // {
+              //   expiresIn: '24h',
+              // },
             );
             return done(null, token);
           }
@@ -54,9 +54,9 @@ module.exports = () => {
               name: newUser.name,
             },
             JWT_SECRET,
-            {
-              expiresIn: '24h',
-            },
+            // {
+            //   expiresIn: '24h',
+            // },
           );
           console.log('token : ' + token);
           return done(null, token);
