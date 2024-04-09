@@ -88,8 +88,8 @@ class UserService {
     const users = await userRepository.allUsers();
     if (!users.length === 0) {
       throw new AppError(
-        resourceNotFoundError.inputError,
-        "회원목록이 없음",
+        commonErrors.resourceNotFoundError,
+        "회원목록이 존재하지 않습니다.",
         404,
       );
     }
