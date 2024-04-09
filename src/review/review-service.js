@@ -1,11 +1,12 @@
 const reviewRepository = require('./review-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
+const userRepository = require('../user/user-repository.js');
 
 const reviewService = {
   // 새로운 리뷰 등록
-  async createReview({ place_id, content, user_email }) {
-    const userInfo = await userRepository.findByEmail(user_email);
+  async createReview({ place_id, content, user_id }) {
+    const userInfo = await userRepository.findUserById(user_id);
     const newReview = await reviewRepository.createReview({
       place_id,
       content,
@@ -22,8 +23,12 @@ const reviewService = {
     return { message: '정상적으로 등록되었습니다.', newReview };
   },
   // 장소의 리뷰 모두 가져오기
-  async getReviews(place_id) {
-    const reviews = await reviewRepository.findReviews({ place_id });
+  async getReviews(pageNumber, pageSize, place_id) {
+    const reviews = await reviewRepository.findReviews(
+      pageNumber,
+      pageSize,
+      place_id,
+    );
     if (reviews.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -34,8 +39,8 @@ const reviewService = {
     return reviews;
   },
   // 유저의 리뷰 모두 가져오기
-  async getReviewsByUser(user_email) {
-    const userInfo = await userRepository.findByEmail(user_email);
+  async getReviewsByUser(userId, pageNumber, pageSize) {
+    const userInfo = await userRepository.findUserById(userId);
     if (!userInfo) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -43,7 +48,7 @@ const reviewService = {
         400,
       );
     }
-    const reviews = await reviewRepository.findReviews({
+    const reviews = await reviewRepository.findReviews(pageNumber, pageSize, {
       author: userInfo.nickname,
     });
     if (reviews.length === 0) {
@@ -56,13 +61,8 @@ const reviewService = {
     return reviews;
   },
   // 특정 id를 가진 리뷰 내용 수정
-  async updateReview(id, { place_id, content, author, author_tag }) {
-    const updatedReview = await reviewRepository.updateReview(id, {
-      place_id,
-      content,
-      author,
-      author_tag,
-    });
+  async updateReview(id, content) {
+    const updatedReview = await reviewRepository.updateReview(id, content);
     if (updatedReview === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
