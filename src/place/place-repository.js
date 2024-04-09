@@ -9,6 +9,7 @@ const placeRepository = {
     vegan_option,
     tel,
     address,
+    address_lot_number,
     address_detail,
     location,
     open_times,
@@ -21,6 +22,7 @@ const placeRepository = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -31,7 +33,7 @@ const placeRepository = {
   },
   // id로 장소 찾기
   async findPlaceById(id) {
-    return await Place.findById(id).lean();
+    return await Place.findById(id).populate('category_img').lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
   async findPlacesByKeyword(query) {
@@ -39,13 +41,23 @@ const placeRepository = {
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { address: { $regex: query, $options: 'i' } },
+        { address_lot_number: { $regex: query, $options: 'i' } },
         { address_detail: { $regex: query, $options: 'i' } },
       ],
-    }).lean();
+    })
+      .populate('category_img')
+      .lean();
   },
 
   // 조건을 만족하는 장소 모두 찾기
-  async findPlaces(center, radius, category, vegan_option) {
+  async findPlaces(
+    center,
+    radius,
+    pageNumber,
+    pageSize,
+    category,
+    vegan_option,
+  ) {
     let query = {};
 
     if (center && radius) {
@@ -73,9 +85,17 @@ const placeRepository = {
     let places;
     // 조건이 없다면 전체 데이터 가져오기
     if (Object.keys(query).length === 0) {
-      places = await Place.find().exec();
+      places = await Place.find()
+        .populate('category_img')
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     } else {
-      places = await Place.find(query).exec();
+      places = await Place.find(query)
+        .populate('category_img')
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
     }
     return places;
   },
@@ -89,6 +109,7 @@ const placeRepository = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -104,18 +125,23 @@ const placeRepository = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
         sns_url,
       },
       { new: true },
-    ).lean();
+    )
+      .populate('category_img')
+      .lean();
     return updatedPlace;
   },
   // 특정 id를 가진 장소 삭제
   async deletePlace(id) {
-    const deletedPlace = await Place.findByIdAndDelete(id).lean();
+    const deletedPlace = await Place.findByIdAndDelete(id)
+      .populate('category_img')
+      .lean();
     return deletedPlace;
   },
 };

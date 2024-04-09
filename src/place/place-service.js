@@ -11,6 +11,7 @@ const placeService = {
     vegan_option,
     tel,
     address,
+    address_lot_number,
     address_detail,
     location,
     open_times,
@@ -28,6 +29,7 @@ const placeService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location: newLocation,
       open_times,
@@ -71,7 +73,14 @@ const placeService = {
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getPlaces(center, radius, category, vegan_option) {
+  async getPlaces(
+    center,
+    radius,
+    pageNumber,
+    pageSize,
+    category,
+    vegan_option,
+  ) {
     if ((center && !radius) || (!center && radius)) {
       throw new AppError(
         commonErrors.invalidRequestError,
@@ -83,6 +92,8 @@ const placeService = {
     const places = await placeRepository.findPlaces(
       center,
       radius,
+      pageNumber,
+      pageSize,
       category,
       vegan_option,
     );
@@ -107,6 +118,7 @@ const placeService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,
@@ -120,6 +132,7 @@ const placeService = {
       vegan_option,
       tel,
       address,
+      address_lot_number,
       address_detail,
       location,
       open_times,

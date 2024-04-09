@@ -27,6 +27,10 @@ const placeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    address_lot_number: {
+      type: String,
+      required: true,
+    },
     address_detail: {
       type: String,
       default: '',
@@ -43,12 +47,12 @@ const placeSchema = new mongoose.Schema(
       },
     },
     open_times: {
-      type: String,
-      default: '',
+      type: [String],
+      default: [],
     },
     sns_url: {
-      type: String,
-      default: '',
+      type: [String],
+      default: [],
     },
   },
   {
