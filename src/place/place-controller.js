@@ -16,7 +16,15 @@ const placeController = {
   // 장소 필터링 GET
   async getPlaces(req, res, next) {
     try {
-      const { center, radius, category, vegan_option, search } = req.query;
+      const {
+        center,
+        radius,
+        pageNumber,
+        pageSize,
+        category,
+        vegan_option,
+        search,
+      } = req.query;
       let places;
       if (search) {
         places = await placeService.getPlacesByKeyword(search);
@@ -24,6 +32,8 @@ const placeController = {
         places = await placeService.getPlaces(
           center,
           radius,
+          pageNumber,
+          pageSize,
           category,
           vegan_option,
         );
@@ -44,6 +54,7 @@ const placeController = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
@@ -56,6 +67,7 @@ const placeController = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
@@ -77,6 +89,7 @@ const placeController = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
@@ -89,6 +102,7 @@ const placeController = {
         vegan_option,
         tel,
         address,
+        address_lot_number,
         address_detail,
         location,
         open_times,
