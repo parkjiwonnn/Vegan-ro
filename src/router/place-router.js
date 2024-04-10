@@ -13,6 +13,7 @@ placeRouter.get('/places/:placeId', placeController.getPlace);
 // GET /admin/places?pageSize=number&pageNumber=number
 placeRouter.get(
   '/admin/places',
+  userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   placeController.getPlaces,
 );
@@ -20,6 +21,7 @@ placeRouter.get(
 // POST /admin/places
 placeRouter.post(
   '/admin/places',
+  userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   placeController.postPlace,
 );
@@ -27,6 +29,7 @@ placeRouter.post(
 // PUT /admin/places/:placeId
 placeRouter.put(
   '/admin/places/:placeId',
+  userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   placeController.putPlace,
 );
@@ -34,6 +37,7 @@ placeRouter.put(
 // DELETE /admin/places/:placeId
 placeRouter.delete(
   '/admin/places/:placeId',
+  userMiddleware.isAuthenticated,
   userMiddleware.isAdmin,
   placeController.deletePlace,
 );

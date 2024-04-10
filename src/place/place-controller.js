@@ -25,10 +25,12 @@ const placeController = {
         vegan_option,
         search,
       } = req.query;
-      let places;
+      let query = {};
       if (search) {
-        places = await placeService.getPlacesByKeyword(search);
-      } else {
+        query.search = search;
+      }
+      let places;
+      if (Object.keys(query).length === 0) {
         places = await placeService.getPlaces(
           center,
           radius,
@@ -37,6 +39,8 @@ const placeController = {
           category,
           vegan_option,
         );
+      } else {
+        places = await placeService.getPlacesByKeyword(query.search);
       }
       res.json(responseFormat.buildResponse(places));
     } catch (error) {

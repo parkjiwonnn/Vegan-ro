@@ -18,7 +18,7 @@ const placeService = {
     sns_url,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
-    const category_img = await imageRepository.findByName({ category })._id;
+    const category_img = await imageRepository.getImageByName(category)._id;
     // location GeoJSON 객체로 저장
     const newLocation = {
       type: 'Point',
