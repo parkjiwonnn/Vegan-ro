@@ -5,9 +5,16 @@ const bookmarkRepository = {
 
 // 북마크 전체 조회 (유저)
 async getBookmarksByUserId(user_id) {
-    const bookmarks = await Bookmark.find(user_id).populate('place_id');
+    const bookmarks = await Bookmark.find(user_id).populate({
+        path: 'place_id', // 첫 번째로 populate할 필드
+        populate: {
+          path: 'category_img', // place_id 내에서 또 populate할 필드
+          model: 'Image' // category_id 필드에 해당하는 모델 이름
+        }
+      });
     return bookmarks;
 },
+
 
 // 북마크 추가 (유저) 
 async createBookmark({user_id,place_id}) {

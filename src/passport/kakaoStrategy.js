@@ -53,7 +53,7 @@ module.exports = () => {
               userId: newUser._id,
               email: newUser.email,
               nickname: newUser.nickname,
-              is_admin: exUser.is_admin
+              is_admin: newUser.is_admin
             },
             JWT_SECRET,
             // {

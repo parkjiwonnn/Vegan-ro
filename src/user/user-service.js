@@ -2,11 +2,12 @@ const userRepository = require('./user-repository');
 const AppError = require('../errors/AppError');
 const commonErrors = require('../errors/commonErrors');
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 
 class UserService {
   //로그인
   async signIn({ email }) {
-    const user = await userRepository.findById(id);
+    const user = await userRepository.findByEmail(email);
     if (user === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -16,15 +17,17 @@ class UserService {
     }
 
     const tokenPayload = {
-      email,
-      isAdmin: user.isAdmin,
+      userId: user._id,
+      email: user.email,
+      nickname: user.nickname,
+      is_admin: user.is_admin
     };
 
     const encodedToken = await new Promise((resolve, reject) => {
       jwt.sign(
         tokenPayload,
         config.JWT_SECRET,
-        { expiresIn: '24h' },
+        //{ expiresIn: '24h' },
         (error, encoded) => {
           if (error) {
             reject(error);
