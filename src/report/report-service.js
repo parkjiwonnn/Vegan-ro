@@ -7,7 +7,6 @@ const reportedPlaceService = {
   async createReportedPlace({
     name,
     category,
-    category_img,
     vegan_option,
     tel,
     address,
@@ -19,6 +18,7 @@ const reportedPlaceService = {
     user_id,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
+    const category_img = await imageRepository.getImageByName(category);
     const newReportedPlace = await reportedPlaceRepository.createReportedPlace({
       name,
       category,
@@ -56,33 +56,12 @@ const reportedPlaceService = {
     return reportedPlace;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getReportedPlaces(pageNumber, pageSize) {
-    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
-      pageNumber,
-      pageSize,
-    );
-    if (reportedPlaces.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 제보가 존재하지 않습니다',
-        404,
-      );
-    }
-    return reportedPlaces;
-  },
-  async getReportedPlacesByUser(pageNumber, pageSize, user_id) {
+  async getReportedPlaces(pageNumber, pageSize, user_id) {
     const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
       pageNumber,
       pageSize,
       user_id,
     );
-    if (reportedPlaces.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 제보가 존재하지 않습니다',
-        404,
-      );
-    }
     return reportedPlaces;
   },
   // 특정 id를 가진 장소 내용 수정
@@ -91,7 +70,6 @@ const reportedPlaceService = {
     {
       name,
       category,
-      category_img,
       vegan_option,
       tel,
       address,
@@ -103,6 +81,8 @@ const reportedPlaceService = {
       user_id,
     },
   ) {
+    // category_img 이미지 컬렉션에서 가져오기
+    const category_img = await imageRepository.getImageByName(category);
     const updatedReportedPlace =
       await reportedPlaceRepository.updateReportedPlace(id, {
         name,
