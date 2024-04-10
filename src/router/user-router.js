@@ -2,6 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const userController = require('../user/user-controller');
 const authMiddleware = require('../middleware/auth-middleware');
+const validationMiddleware = require('../middleware/validation-middleware');
 const passport = require('passport');
 const config = require('../config');
 const errors = require('../errors/responseFormat');
@@ -39,10 +40,10 @@ userRouter.get('/kakao/logout', (req, res) => {
 });
 
 // 회원가입
-userRouter.post('/signup', userController.createUser);
+userRouter.post('/signup',validationMiddleware.validateRegister, userController.createUser);
 
 // 로그인
-userRouter.post('/login', userController.postSignIn);
+userRouter.post('/login',validationMiddleware.validateRegister, userController.postSignIn);
 
 // 회원 정보 조회
 userRouter.get(
@@ -54,6 +55,7 @@ userRouter.get(
 // 회원 정보 수정
 userRouter.put(
   '/users/me',
+  validationMiddleware.validateUser,
   authMiddleware.isAuthenticated,
   userController.putUserInfo,
 );
@@ -61,6 +63,7 @@ userRouter.put(
 // 회원 탈퇴
 userRouter.patch(
   '/users/me/withdrawal',
+  validationMiddleware.validateUser,
   authMiddleware.isAuthenticated,
   userController.patchUserInfo,
 );

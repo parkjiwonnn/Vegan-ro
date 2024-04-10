@@ -2,16 +2,16 @@ const express = require('express');
 const imageRouter = express.Router();
 const imageController = require('../image/image-controller');
 const authMiddleware = require('../middleware/auth-middleware');
-
+const validationMiddleware = require('../middleware/validation-middleware');
 
 //admin 경로에 미들웨어 적용
 imageRouter.use('/admin', authMiddleware.isAuthenticated, authMiddleware.isAdmin);
 
 // 이미지 추가
-imageRouter.post('/admin', imageController.postImage);
+imageRouter.post('/admin',validationMiddleware.validateImage, imageController.postImage);
 
 // 이미지 수정
-imageRouter.put('/admin/images/:imageId', imageController.putImage);
+imageRouter.put('/admin/images/:imageId',validationMiddleware.validateImage, imageController.putImage);
 
 // 이미지 삭제
 imageRouter.delete('/admin/images/:imageId', imageController.deleteImage);
