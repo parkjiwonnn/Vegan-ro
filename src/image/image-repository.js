@@ -34,6 +34,11 @@ async createImage({ name, url }) {
   async getImageById(id) {
     const imageinfo = await Image.findById(id).lean();
     return imageinfo;
+},
+//이름으로 이미지 조회
+async getImageByName(name) {
+  const imageinfo1 = await Image.findOne({ name: name });
+  return imageinfo1;
 }
 };
 
