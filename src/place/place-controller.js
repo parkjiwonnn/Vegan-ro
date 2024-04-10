@@ -40,7 +40,11 @@ const placeController = {
           vegan_option,
         );
       } else {
-        places = await placeService.getPlacesByKeyword(query.search);
+        places = await placeService.getPlacesByKeyword(
+          query.search,
+          pageNumber,
+          pageSize,
+        );
       }
       res.json(responseFormat.buildResponse(places));
     } catch (error) {
