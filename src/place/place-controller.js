@@ -46,11 +46,9 @@ const placeController = {
   // 새로운 장소 등록 POST
   async postPlace(req, res, next) {
     try {
-      // reported_place의 데이터 가져와서 등록하기
       const {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -63,7 +61,6 @@ const placeController = {
       const newPlace = await placeService.createPlace({
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
