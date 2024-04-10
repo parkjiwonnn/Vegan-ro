@@ -1,6 +1,7 @@
 const express = require('express');
 const reportedPlaceController = require('../report/report-controller');
 const authMiddleware = require('../middleware/auth-middleware');
+const validateReportedPlace = require('../middleware/validation-middleware');
 
 const reportedPlaceRouter = express.Router();
 
@@ -23,6 +24,7 @@ reportedPlaceRouter.get(
 reportedPlaceRouter.post(
   '/reports',
   authMiddleware.isAuthenticated,
+  validateReportedPlace.validateReportedPlace,
   reportedPlaceController.postReportedPlace,
 );
 
@@ -37,6 +39,7 @@ reportedPlaceRouter.get(
 reportedPlaceRouter.put(
   '/reports/:reportedPlaceId',
   authMiddleware.isAuthenticated,
+  validateReportedPlace.validateReportedPlace,
   reportedPlaceController.putReportedPlace,
 );
 
