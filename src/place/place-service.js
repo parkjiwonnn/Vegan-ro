@@ -59,8 +59,12 @@ const placeService = {
     return place;
   },
   // 검색어를 만족하는 장소 모두 가져오기
-  async getPlacesByKeyword(query) {
-    const places = await placeRepository.findPlacesByKeyword(query);
+  async getPlacesByKeyword(query, pageNumber, pageSize) {
+    const places = await placeRepository.findPlacesByKeyword(
+      query,
+      pageNumber,
+      pageSize,
+    );
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
