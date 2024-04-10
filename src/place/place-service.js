@@ -96,7 +96,6 @@ const placeService = {
     {
       name,
       category,
-      category_img,
       vegan_option,
       tel,
       address,
@@ -107,6 +106,8 @@ const placeService = {
       sns_url,
     },
   ) {
+    // category_img 이미지 컬렉션에서 가져오기
+    const category_img = await imageRepository.getImageByName(category);
     const updatedPlace = await placeRepository.updatePlace(id, {
       name,
       category,
