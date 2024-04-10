@@ -25,10 +25,12 @@ const placeController = {
         vegan_option,
         search,
       } = req.query;
-      let places;
+      let query = {};
       if (search) {
-        places = await placeService.getPlacesByKeyword(search);
-      } else {
+        query.search = search;
+      }
+      let places;
+      if (Object.keys(query).length === 0) {
         places = await placeService.getPlaces(
           center,
           radius,
@@ -37,6 +39,8 @@ const placeController = {
           category,
           vegan_option,
         );
+      } else {
+        places = await placeService.getPlacesByKeyword(query.search);
       }
       res.json(responseFormat.buildResponse(places));
     } catch (error) {
@@ -46,11 +50,9 @@ const placeController = {
   // 새로운 장소 등록 POST
   async postPlace(req, res, next) {
     try {
-      // reported_place의 데이터 가져와서 등록하기
       const {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -63,7 +65,6 @@ const placeController = {
       const newPlace = await placeService.createPlace({
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
