@@ -36,7 +36,7 @@ const placeRepository = {
     return await Place.findById(id).populate('category_img').lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
-  async findPlacesByKeyword(query) {
+  async findPlacesByKeyword(query, pageNumber, pageSize) {
     return await Place.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
@@ -46,6 +46,8 @@ const placeRepository = {
       ],
     })
       .populate('category_img')
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
       .lean();
   },
   // 조건을 만족하는 장소 모두 찾기
