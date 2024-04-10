@@ -14,7 +14,8 @@ reportedPlaceRouter.get(
 // GET /admin/reports
 reportedPlaceRouter.get(
   '/admin/reports',
-  // adminMiddleware
+  userMiddleware.isAuthenticated,
+  userMiddleware.isAdmin,
   reportedPlaceController.getReportedPlaces,
 );
 

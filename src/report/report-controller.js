@@ -31,7 +31,7 @@ const reportedPlaceController = {
     try {
       const { pageNumber, pageSize } = req.query;
       const user_id = req.user.userId;
-      const reportedPlaces = await reportedPlaceService.getReportedPlacesByUser(
+      const reportedPlaces = await reportedPlaceService.getReportedPlaces(
         pageNumber,
         pageSize,
         user_id,
@@ -47,7 +47,6 @@ const reportedPlaceController = {
       const {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -61,7 +60,6 @@ const reportedPlaceController = {
       const newReportedPlace = await reportedPlaceService.createReportedPlace({
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -84,7 +82,6 @@ const reportedPlaceController = {
       const {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -99,7 +96,6 @@ const reportedPlaceController = {
         await reportedPlaceService.updateReportedPlace(reportedPlaceId, {
           name,
           category,
-          category_img,
           vegan_option,
           tel,
           address,

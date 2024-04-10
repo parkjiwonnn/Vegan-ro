@@ -86,7 +86,6 @@ const placeController = {
       const {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
@@ -99,7 +98,6 @@ const placeController = {
       const updatedPlace = await placeService.updatePlace(placeId, {
         name,
         category,
-        category_img,
         vegan_option,
         tel,
         address,
