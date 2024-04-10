@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const userController = require('../user/user-controller');
-const userMiddleware = require('../middleware/user-middleware');
+const authMiddleware = require('../middleware/auth-middleware');
 const passport = require('passport');
 const config = require('../config');
 const errors = require('../errors/responseFormat');
@@ -47,40 +47,40 @@ userRouter.post('/login', userController.postSignIn);
 // 회원 정보 조회
 userRouter.get(
   '/users/me',
-  userMiddleware.isAuthenticated,
+  authMiddleware.isAuthenticated,
   userController.getUserInfo,
 );
 
 // 회원 정보 수정
 userRouter.put(
   '/users/me',
-  userMiddleware.isAuthenticated,
+  authMiddleware.isAuthenticated,
   userController.putUserInfo,
 );
 
 // 회원 탈퇴
 userRouter.patch(
   '/users/me/withdrawal',
-  userMiddleware.isAuthenticated,
+  authMiddleware.isAuthenticated,
   userController.patchUserInfo,
 );
 
 //관리자 페이지 접근
-userRouter.get('/admin', userMiddleware.isAdmin);
+userRouter.get('/admin', authMiddleware.isAdmin);
 
 // 관리자 모든 회원 정보 조회
 userRouter.get(
   '/admin/users',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   userController.getUsers,
 );
 
 // 관리자 회원 정보 삭제
 userRouter.delete(
   '/admin/users/:userId',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   userController.deleteUser,
 );
 

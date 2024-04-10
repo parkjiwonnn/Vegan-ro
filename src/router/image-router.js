@@ -1,11 +1,11 @@
 const express = require('express');
 const imageRouter = express.Router();
 const imageController = require('../image/image-controller');
-const userMiddleware = require('../middleware/user-middleware');
+const authMiddleware = require('../middleware/auth-middleware');
 
 
 //admin 경로에 미들웨어 적용
-imageRouter.use('/admin', userMiddleware.isAuthenticated, userMiddleware.isAdmin);
+imageRouter.use('/admin', authMiddleware.isAuthenticated, authMiddleware.isAdmin);
 
 // 이미지 추가
 imageRouter.post('/admin', imageController.postImage);

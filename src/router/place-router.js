@@ -1,6 +1,6 @@
 const express = require('express');
 const placeController = require('../place/place-controller');
-const userMiddleware = require('../middleware/user-middleware');
+const authMiddleware = require('../middleware/auth-middleware');
 
 const placeRouter = express.Router();
 
@@ -13,32 +13,32 @@ placeRouter.get('/places/:placeId', placeController.getPlace);
 // GET /admin/places?pageSize=number&pageNumber=number
 placeRouter.get(
   '/admin/places',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   placeController.getPlaces,
 );
 
 // POST /admin/places
 placeRouter.post(
   '/admin/places',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   placeController.postPlace,
 );
 
 // PUT /admin/places/:placeId
 placeRouter.put(
   '/admin/places/:placeId',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   placeController.putPlace,
 );
 
 // DELETE /admin/places/:placeId
 placeRouter.delete(
   '/admin/places/:placeId',
-  userMiddleware.isAuthenticated,
-  userMiddleware.isAdmin,
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
   placeController.deletePlace,
 );
 
