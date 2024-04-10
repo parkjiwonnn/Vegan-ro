@@ -1,23 +1,28 @@
 const express = require('express');
 const imageRouter = express.Router();
-const imageService = require('../image/image-service');
-const Image = require('../image/image-schema');
+const imageController = require('../image/image-controller');
+const userMiddleware = require('../middleware/user-middleware');
 
-// 전체 이미지 조회
-imageRouter.get(
-  '/images',
-  async (req, res, next) => {
-    try {
-      const images = await imageService.getAll();
-      res.status(200).json({
-        status: 200,
-        message: '전체 이미지 목록 조회 성공',
-        data: images,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+
+//admin 경로에 미들웨어 적용
+imageRouter.use('/admin', userMiddleware.isAuthenticated, userMiddleware.isAdmin);
+
+// 이미지 추가
+imageRouter.post('/admin', imageController.postImage);
+
+// 이미지 수정
+imageRouter.put('/admin/images/:imageId', imageController.putImage);
+
+// 이미지 삭제
+imageRouter.delete('/admin/images/:imageId', imageController.deleteImage);
+
+// 이미지 전체 조회
+imageRouter.get('/admin/images', imageController.getImages);
+
+// 이미지 id로 조회
+imageRouter.get('/admin/images/:imageId', imageController.getImageById);
+
+
+
 
 module.exports = imageRouter;

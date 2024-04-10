@@ -17,7 +17,9 @@ const authenticate = (req, res, next) => {
         {
           userId: user._id,
           email: user.email,
-          name: user.name,
+          nickname: user.nickname,
+          is_admin:user.is_admin
+
         },
         process.env.JWT_SECRET,
       );
