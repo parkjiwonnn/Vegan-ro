@@ -48,7 +48,6 @@ const placeRepository = {
       .populate('category_img')
       .lean();
   },
-
   // 조건을 만족하는 장소 모두 찾기
   async findPlaces(
     center,

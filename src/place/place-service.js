@@ -1,13 +1,13 @@
 const placeRepository = require('./place-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
+const imageRepository = require('../image/image-repository.js');
 
 const placeService = {
   // 새로운 장소 등록
   async createPlace({
     name,
     category,
-    category_img,
     vegan_option,
     tel,
     address,
@@ -18,6 +18,8 @@ const placeService = {
     sns_url,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
+    const category_img = await imageRepository.getImageByName(category);
+    // location GeoJSON 객체로 저장
     const newLocation = {
       type: 'Point',
       coordinates: location,
@@ -54,22 +56,11 @@ const placeService = {
         400,
       );
     }
-    // 현재 위치와의 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 req.body 가져오기
     return place;
   },
   // 검색어를 만족하는 장소 모두 가져오기
   async getPlacesByKeyword(query) {
     const places = await placeRepository.findPlacesByKeyword(query);
-    if (places.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 검색어를 만족하는 장소가 존재하지 않습니다',
-        404,
-      );
-    }
-    // 현재 위치와의 각 장소 별로 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 center값 가져오기
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
@@ -97,15 +88,6 @@ const placeService = {
       category,
       vegan_option,
     );
-    if (places.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 장소가 존재하지 않습니다',
-        404,
-      );
-    }
-    // 현재 위치와의 각 장소 별로 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 가져온 center 사용
     return places;
   },
   // 특정 id를 가진 장소 내용 수정
