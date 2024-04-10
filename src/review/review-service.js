@@ -29,13 +29,6 @@ const reviewService = {
       pageSize,
       place_id,
     );
-    if (reviews.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 리뷰가 존재하지 않습니다',
-        400,
-      );
-    }
     return reviews;
   },
   // 유저의 리뷰 모두 가져오기
@@ -51,13 +44,6 @@ const reviewService = {
     const reviews = await reviewRepository.findReviews(pageNumber, pageSize, {
       author: userInfo.nickname,
     });
-    if (reviews.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 리뷰가 존재하지 않습니다',
-        400,
-      );
-    }
     return reviews;
   },
   // 특정 id를 가진 리뷰 내용 수정
