@@ -19,6 +19,9 @@ imageRouter.delete('/admin/images/:imageId', imageController.deleteImage);
 // 이미지 전체 조회
 imageRouter.get('/admin/images', imageController.getImages);
 
+// 이미지 id로 조회
+imageRouter.get('/admin/images/:imageId', imageController.getImageById);
+
 
 
 

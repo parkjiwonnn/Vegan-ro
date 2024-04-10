@@ -45,6 +45,16 @@ async getImages(req, res, next) {
       next(error);
     }
   },
+    // 이미지 id로 조회
+async getImageById(req, res, next) {
+  try {
+    const { imageId } = req.params;
+    const imageinfo = await imageService.getImageById(imageId);
+    res.json(errors.buildResponse(imageinfo));
+  } catch (error) {
+    next(error);
+  }
+  },
 
 
 

@@ -29,6 +29,12 @@ async createImage({ name, url }) {
     const images = await Image.find({}).lean();
     return images;
   },
+
+  //이미지 id로 조회
+  async getImageById(id) {
+    const imageinfo = await Image.findById(id).lean();
+    return imageinfo;
+}
 };
 
 
