@@ -39,7 +39,17 @@ const imageController = {
   // 이미지 전체 조회
 async getImages(req, res, next) {
     try {
-      const images = await imageService.getImages();
+      const { name } = req.query;
+
+        let images;
+        if (name) {
+            // 이름을 기반으로 이미지를 조회
+            images = await imageService.getImageByName(name);
+        } else {
+            // 전체 이미지 조회
+            images = await imageService.getImages(req.query);
+        }
+
       res.json(errors.buildResponse(images));
     } catch (error) {
       next(error);
@@ -55,6 +65,16 @@ async getImageById(req, res, next) {
     next(error);
   }
   },
+  //  이름으로 이미지 조회
+async getImageByName(req, res, next) {
+  try {
+    const { name } = req.query;
+    const imageinfo1 = await imageService.getImageByName(name);
+    res.json(errors.buildResponse(imageinfo1));
+  } catch (error) {
+    next(error);
+  }
+}
 
 
 

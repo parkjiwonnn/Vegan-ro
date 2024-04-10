@@ -16,11 +16,12 @@ imageRouter.put('/admin/images/:imageId', imageController.putImage);
 // 이미지 삭제
 imageRouter.delete('/admin/images/:imageId', imageController.deleteImage);
 
-// 이미지 전체 조회
+// 이미지 전체 조회(이름 쿼리)
 imageRouter.get('/admin/images', imageController.getImages);
 
 // 이미지 id로 조회
 imageRouter.get('/admin/images/:imageId', imageController.getImageById);
+
 
 
 

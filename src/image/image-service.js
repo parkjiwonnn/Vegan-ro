@@ -67,6 +67,18 @@ async deleteImage(id) {
         );
   }
   return imageinfo;
+},
+// 이름으로 이미지 조회
+async getImageByName(name) {
+  const imageinfo1 = await imageRepository.getImageByName(name);
+  if (!imageinfo1) {
+    throw new AppError(
+      commonErrors.resourceNotFoundError,
+      '해당 이미지가 존재하지 않습니다',
+      404,
+    );
+  }
+  return imageinfo1;
 }
    
 };
