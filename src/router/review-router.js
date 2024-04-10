@@ -17,7 +17,8 @@ reviewRouter.get('/reviews', reviewController.getReviews);
 // GET /admin/reviews?pageNumber=number&pageSize=number
 reviewRouter.get(
   '/admin/reviews',
-  // adminMiddleware
+  userMiddleware.isAuthenticated,
+  userMiddleware.isAdmin,
   reviewController.getReviews,
 );
 
@@ -45,7 +46,8 @@ reviewRouter.delete(
 // DELETE /admin/reviews/:reviewId
 reviewRouter.delete(
   '/admin/reviews/:reviewId',
-  //adminMiddleware
+  userMiddleware.isAuthenticated,
+  userMiddleware.isAdmin,
   reviewController.deleteReiview,
 );
 
