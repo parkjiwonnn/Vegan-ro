@@ -1,6 +1,7 @@
 const express = require('express');
 const reviewController = require('../review/review-controller');
 const authMiddleware = require('../middleware/auth-middleware');
+const validationMiddleware = require('../middleware/validation-middleware');
 
 const reviewRouter = express.Router();
 
@@ -26,6 +27,7 @@ reviewRouter.get(
 reviewRouter.post(
   '/reviews',
   authMiddleware.isAuthenticated,
+  validationMiddleware.validateReview,
   reviewController.postReview,
 );
 
@@ -33,6 +35,7 @@ reviewRouter.post(
 reviewRouter.patch(
   '/reviews/:reviewId',
   authMiddleware.isAuthenticated,
+  validationMiddleware.validateReview,
   reviewController.patchReview,
 );
 

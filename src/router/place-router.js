@@ -1,6 +1,7 @@
 const express = require('express');
 const placeController = require('../place/place-controller');
 const authMiddleware = require('../middleware/auth-middleware');
+const validationMiddleware = require('../middleware/validation-middleware');
 
 const placeRouter = express.Router();
 
@@ -23,6 +24,7 @@ placeRouter.post(
   '/admin/places',
   authMiddleware.isAuthenticated,
   authMiddleware.isAdmin,
+  validationMiddleware.validatePlace,
   placeController.postPlace,
 );
 
@@ -31,6 +33,7 @@ placeRouter.put(
   '/admin/places/:placeId',
   authMiddleware.isAuthenticated,
   authMiddleware.isAdmin,
+  validationMiddleware.validatePlace,
   placeController.putPlace,
 );
 
