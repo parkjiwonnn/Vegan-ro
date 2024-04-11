@@ -100,10 +100,10 @@ class UserService {
   
 
   // 관리자 회원 정보 삭제
-  async deleteUser(userId) {
-    const deletedUser = await userRepository.deleteById(userId);
+  async deleteUser(id) {
+    const deletedUser = await userRepository.deleteById(id);
 
-    if (!deletedUser) {
+    if (deletedUser=== null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 회원이 존재하지 않습니다',

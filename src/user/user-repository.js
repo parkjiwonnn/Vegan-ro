@@ -83,9 +83,9 @@ class UserRepository {
     }
   }
   //관리자 회원 정보 삭제
-  async deleteById(userId) {
+  async deleteById(id) {
     try {
-      const deletedUser = await User.findOneAndDelete({ userId });
+      const deletedUser = await User.findOneAndDelete({ _id: id });
       return deletedUser;
     } catch (error) {
       throw new Error(error);
