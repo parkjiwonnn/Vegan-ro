@@ -6,7 +6,6 @@ const placeController = {
   async getPlace(req, res, next) {
     try {
       const { placeId } = req.params;
-      // req.body에 현재위치 받아오기
       const place = await placeService.getPlace(placeId);
       res.json(responseFormat.buildResponse(place));
     } catch (error) {
@@ -122,6 +121,16 @@ const placeController = {
       const { placeId } = req.params;
       const deletedplace = await placeService.deletePlace(placeId);
       res.json(responseFormat.buildResponse(deletedplace));
+    } catch (error) {
+      next(error);
+    }
+  },
+  // 장소 삭제 여부 PATCH
+  async patchDeletedAt(req, res, next) {
+    try {
+      const { placeId } = req.params;
+      const updatedPlace = await placeService.updateDeletedAt(placeId);
+      res.json(responseFormat.buildResponse(updatedPlace));
     } catch (error) {
       next(error);
     }
