@@ -5,7 +5,7 @@ const validationMiddleware = require('../middleware/validation-middleware');
 
 const placeRouter = express.Router();
 
-// GET /places?center=x,y&radius=number&pageNumber=number&pageSize=number&category=value&vegan_option=true&search=value
+// GET /places?center=x,y&radius=number&pageNumber=number&pageSize=number&category=value&veganOption=true&search=value
 placeRouter.get('/places', placeController.getPlaces);
 
 // GET /places/:placeId

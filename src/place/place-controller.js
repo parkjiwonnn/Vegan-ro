@@ -21,7 +21,7 @@ const placeController = {
         pageNumber,
         pageSize,
         category,
-        vegan_option,
+        veganOption,
         search,
       } = req.query;
       let query = {};
@@ -36,7 +36,7 @@ const placeController = {
           pageNumber,
           pageSize,
           category,
-          vegan_option,
+          veganOption,
         );
       } else {
         places = await placeService.getPlacesByKeyword(
@@ -56,26 +56,26 @@ const placeController = {
       const {
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       } = req.body;
       const newPlace = await placeService.createPlace({
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       });
       res.json(responseFormat.buildResponse(newPlace));
     } catch (error) {
@@ -89,26 +89,26 @@ const placeController = {
       const {
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       } = req.body;
       const updatedPlace = await placeService.updatePlace(placeId, {
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       });
       res.json(responseFormat.buildResponse(updatedPlace));
     } catch (error) {

@@ -2,11 +2,11 @@ const Review = require('./review-schema');
 
 const reviewRepository = {
   // 새로운 리뷰 추가
-  async createReview({ place_id, content, user_id }) {
+  async createReview({ placeId, content, userId }) {
     const newReview = new Review({
-      place_id,
+      place_id: placeId,
       content,
-      user_id,
+      user_id: userId,
     });
     await newReview.save();
     return newReview.toObject();
@@ -16,12 +16,16 @@ const reviewRepository = {
     return await Review.findById(id).populate('user_id').lean();
   },
   // 조건을 만족하는 리뷰 모두 찾기
-  async findReviews(pageNumber, pageSize, query) {
-    Object.keys(query).forEach((key) => {
-      if (query[key] === undefined) {
-        delete query[key];
-      }
-    });
+  async findReviews(pageNumber, pageSize, placeId, userId) {
+    let query = {};
+
+    if (placeId) {
+      query.place_id = placeId;
+    }
+
+    if (userId) {
+      query.user_id = userId;
+    }
 
     let reviews;
     // 조건이 없다면 전체 데이터 가져오기

@@ -9,7 +9,7 @@ const reviewRouter = express.Router();
 reviewRouter.get(
   '/reviews/me',
   authMiddleware.isAuthenticated,
-  reviewController.getReviewsByUser,
+  reviewController.getReviews,
 );
 
 // GET /reviews?placeId=value&pageNumber=number&pageSize=number

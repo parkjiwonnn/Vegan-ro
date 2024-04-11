@@ -8,31 +8,31 @@ const reportedPlaceService = {
   async createReportedPlace({
     name,
     category,
-    vegan_option,
+    veganOption,
     tel,
     address,
-    address_lot_number,
-    address_detail,
+    addressLotNumber,
+    addressDetail,
     location,
-    open_times,
-    sns_url,
-    user_id,
+    openTimes,
+    snsUrl,
+    userId,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
-    const category_img = await imageRepository.getImageByName(category);
+    const categoryImg = await imageRepository.getImageByName(category);
     const newReportedPlace = await reportedPlaceRepository.createReportedPlace({
       name,
       category,
-      category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
-      user_id,
+      openTimes,
+      snsUrl,
+      userId,
     });
     if (newReportedPlace === null) {
       throw new AppError(
@@ -57,11 +57,11 @@ const reportedPlaceService = {
     return reportedPlace;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getReportedPlaces(pageNumber, pageSize, user_id) {
+  async getReportedPlaces(pageNumber, pageSize, userId) {
     const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
       pageNumber,
       pageSize,
-      user_id,
+      userId,
     );
     return reportedPlaces;
   },
@@ -71,33 +71,33 @@ const reportedPlaceService = {
     {
       name,
       category,
-      vegan_option,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
-      user_id,
+      openTimes,
+      snsUrl,
+      userId,
     },
   ) {
     // category_img 이미지 컬렉션에서 가져오기
-    const category_img = await imageRepository.getImageByName(category);
+    const categoryImg = await imageRepository.getImageByName(category);
     const updatedReportedPlace =
       await reportedPlaceRepository.updateReportedPlace(id, {
         name,
         category,
-        category_img,
-        vegan_option,
+        categoryImg,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
-        user_id,
+        openTimes,
+        snsUrl,
+        userId,
       });
     if (updatedReportedPlace === null) {
       throw new AppError(

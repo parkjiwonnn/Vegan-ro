@@ -30,11 +30,11 @@ const reportedPlaceController = {
   async getReportedPlacesByUser(req, res, next) {
     try {
       const { pageNumber, pageSize } = req.query;
-      const user_id = req.user.userId;
+      const userId = req.user.userId;
       const reportedPlaces = await reportedPlaceService.getReportedPlaces(
         pageNumber,
         pageSize,
-        user_id,
+        userId,
       );
       res.json(responseFormat.buildResponse(reportedPlaces));
     } catch (error) {
@@ -47,28 +47,28 @@ const reportedPlaceController = {
       const {
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       } = req.body;
-      const user_id = req.user.userId;
+      const userId = req.user.userId;
       const newReportedPlace = await reportedPlaceService.createReportedPlace({
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
-        user_id,
+        openTimes,
+        snsUrl,
+        userId,
       });
       res.json(responseFormat.buildResponse(newReportedPlace));
     } catch (error) {
@@ -82,29 +82,29 @@ const reportedPlaceController = {
       const {
         name,
         category,
-        vegan_option,
+        veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        addressLotNumber,
+        addressDetail,
         location,
-        open_times,
-        sns_url,
+        openTimes,
+        snsUrl,
       } = req.body;
-      const user_id = req.user.userId;
+      const userId = req.user.userId;
       const updatedReportedPlace =
         await reportedPlaceService.updateReportedPlace(reportedPlaceId, {
           name,
           category,
-          vegan_option,
+          veganOption,
           tel,
           address,
-          address_lot_number,
-          address_detail,
+          addressLotNumber,
+          addressDetail,
           location,
-          open_times,
-          sns_url,
-          user_id,
+          openTimes,
+          snsUrl,
+          userId,
         });
       res.json(responseFormat.buildResponse(updatedReportedPlace));
     } catch (error) {
