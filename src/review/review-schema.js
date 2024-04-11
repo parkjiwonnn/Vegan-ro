@@ -11,12 +11,9 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    author: {
-      type: String,
-      required: true,
-    },
-    author_tag: {
-      type: String,
+    user_id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },

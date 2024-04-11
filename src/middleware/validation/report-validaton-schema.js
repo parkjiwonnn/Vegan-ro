@@ -8,7 +8,7 @@ const reportedPlaceValidationSchema = Joi.object({
   tel: Joi.string().default(''),
   address: Joi.string().required(),
   address_lot_number: Joi.string().required(),
-  address_detail: Joi.string().default(''),
+  address_detail: Joi.string().allow('').default(''),
   location: Joi.array()
     .items(
       Joi.number().min(-180).max(180), // 경도

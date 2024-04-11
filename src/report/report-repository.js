@@ -49,12 +49,14 @@ const reportedPlaceRepository = {
     // 조건이 없다면 전체 데이터 가져오기
     if (Object.keys(query).length === 0) {
       reportedPlaces = await ReportedPlace.find()
+        .sort({ createdAt: -1 })
         .populate(['category_img', 'user_id'])
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .exec();
     } else {
       reportedPlaces = await ReportedPlace.find(query)
+        .sort({ createdAt: -1 })
         .populate('category_img')
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
