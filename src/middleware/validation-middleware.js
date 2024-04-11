@@ -15,30 +15,22 @@ const _ = require('lodash');
 
 function getPath(path) {
   const t = path.slice('api');
-  switch (t) {
-    case '/admin/places':
+  switch (true) {
+    case t === '/admin/places' || t.startsWith('/admin/places/'):
       return placeValidationSchema;
-    case '/admin/places/:placeId':
-      return placeValidationSchema;
-    case '/reports':
+    case t === '/reports' || t.startsWith('/reports/'):
       return reportedPlaceValidationSchema;
-    case '/reports/:reportedPlaceId':
-      return reportedPlaceValidationSchema;
-    case '/reviews':
+    case t === '/reviews':
       return reviewValidationSchema;
-    case '/reviews/:reviewId':
+    case t.startsWith('/reviews/'):
       return patchReviewValidationSchema;
-    case '/users/me':
+    case t === '/users/me':
       return userValidationSchema;
-    case '/signup':
+    case t === '/signup' || t === '/login':
       return registerValidationSchema;
-    case '/login':
-      return registerValidationSchema;
-    case '/admin':
+    case t === '/admin' || t.startsWith('/admin/images/'):
       return imageValidationSchema;
-    case '/admin/images/:imageId':
-      return imageValidationSchema;
-    case '/bookmarks':
+    case t === '/bookmarks':
       return bookmarkValidationSchema;
     default:
       return null;

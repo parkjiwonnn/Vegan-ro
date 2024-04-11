@@ -30,7 +30,7 @@ module.exports = () => {
               {
                 userId: exUser._id,
                 email: exUser.email,
-                is_admin: exUser.is_admin
+                isAdmin: exUser.is_admin
               },
               JWT_SECRET,
               // {
@@ -48,7 +48,7 @@ module.exports = () => {
             {
               userId: newUser._id,
               email: newUser.email,
-              is_admin: newUser.is_admin
+              isAdmin: newUser.is_admin
             },
             JWT_SECRET,
             // {
