@@ -8,17 +8,17 @@ const placeService = {
   async createPlace({
     name,
     category,
-    vegan_option,
+    veganOption,
     tel,
     address,
-    address_lot_number,
-    address_detail,
+    addressLotNumber,
+    addressDetail,
     location,
-    open_times,
-    sns_url,
+    openTimes,
+    snsUrl,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
-    const category_img = await imageRepository.getImageByName(category);
+    const categoryImg = await imageRepository.getImageByName(category);
     // location GeoJSON 객체로 저장
     const newLocation = {
       type: 'Point',
@@ -27,15 +27,15 @@ const placeService = {
     const newPlace = await placeRepository.createPlace({
       name,
       category,
-      category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location: newLocation,
-      open_times,
-      sns_url,
+      openTimes,
+      snsUrl,
     });
     if (newPlace === null) {
       throw new AppError(
@@ -68,14 +68,7 @@ const placeService = {
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getPlaces(
-    center,
-    radius,
-    pageNumber,
-    pageSize,
-    category,
-    vegan_option,
-  ) {
+  async getPlaces(center, radius, pageNumber, pageSize, category, veganOption) {
     if ((center && !radius) || (!center && radius)) {
       throw new AppError(
         commonErrors.invalidRequestError,
@@ -90,7 +83,7 @@ const placeService = {
       pageNumber,
       pageSize,
       category,
-      vegan_option,
+      veganOption,
     );
     return places;
   },
@@ -100,14 +93,14 @@ const placeService = {
     {
       name,
       category,
-      vegan_option,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
+      openTimes,
+      snsUrl,
     },
   ) {
     // id가 deleted_at이 null이고, 존재하는 id인지 확인
@@ -120,19 +113,19 @@ const placeService = {
       );
     }
     // category_img 이미지 컬렉션에서 가져오기
-    const category_img = await imageRepository.getImageByName(category);
+    const categoryImg = await imageRepository.getImageByName(category);
     const updatedPlace = await placeRepository.updatePlace(id, {
       name,
       category,
-      category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
+      openTimes,
+      snsUrl,
     });
     return { message: '정상적으로 수정되었습니다.', updatedPlace };
   },

@@ -2,28 +2,16 @@ const reviewService = require('./review-service');
 const responseFormat = require('../errors/responseFormat');
 
 const reviewController = {
-  // 유저의 리뷰 모두 보기 GET
-  async getReviewsByUser(req, res, next) {
-    try {
-      const { pageNumber, pageSize } = req.query;
-      const review = await reviewService.getReviewsByUser(
-        pageNumber,
-        pageSize,
-        req.user.userId,
-      );
-      res.json(responseFormat.buildResponse(review));
-    } catch (error) {
-      next(error);
-    }
-  },
-  // 장소의 리뷰 모두 보기 GET
+  // 조건에 맞는 리뷰 모두 보기 GET
   async getReviews(req, res, next) {
     try {
       const { placeId, pageNumber, pageSize } = req.query;
+      const userId = req.user?.userId || undefined;
       const reviews = await reviewService.getReviews(
         pageNumber,
         pageSize,
         placeId,
+        userId,
       );
       res.json(responseFormat.buildResponse(reviews));
     } catch (error) {
@@ -33,11 +21,11 @@ const reviewController = {
   // 새로운 장소 등록 POST
   async postReview(req, res, next) {
     try {
-      const { place_id, content } = req.body;
+      const { placeId, content } = req.body;
       const newReview = await reviewService.createReview({
-        place_id,
+        placeId,
         content,
-        user_id: req.user.userId,
+        userId: req.user.userId,
       });
       res.json(responseFormat.buildResponse(newReview));
     } catch (error) {
