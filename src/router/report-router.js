@@ -30,7 +30,7 @@ reportedPlaceRouter.post(
 
 // GET /reports/:reportedPlaceId
 reportedPlaceRouter.get(
-  '/reports/me/:reportedPlaceId',
+  '/reports/:reportedPlaceId',
   authMiddleware.isAuthenticated,
   reportedPlaceController.getReportedPlace,
 );

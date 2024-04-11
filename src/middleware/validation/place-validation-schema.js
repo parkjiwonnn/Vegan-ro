@@ -8,7 +8,7 @@ const placeValidationSchema = Joi.object({
   tel: Joi.string().default(''),
   address: Joi.string().required(),
   address_lot_number: Joi.string().required(),
-  address_detail: Joi.string().default(''),
+  address_detail: Joi.string().allow('').default(''),
   // req.body에서 [경도,위도]로 받아오고, service에서 GeoJSON으로 변환해서 저장
   location: Joi.array()
     .items(

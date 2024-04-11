@@ -35,7 +35,7 @@ reviewRouter.post(
 reviewRouter.patch(
   '/reviews/:reviewId',
   authMiddleware.isAuthenticated,
-  validationMiddleware.validateReview,
+  validationMiddleware.validatePatchReview,
   reviewController.patchReview,
 );
 
