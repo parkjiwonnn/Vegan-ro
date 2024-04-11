@@ -5,30 +5,30 @@ const reportedPlaceRepository = {
   async createReportedPlace({
     name,
     category,
-    category_img,
-    vegan_option,
+    categoryImg,
+    veganOption,
     tel,
     address,
-    address_lot_number,
-    address_detail,
+    addressLotNumber,
+    addressDetail,
     location,
-    open_times,
-    sns_url,
-    user_id,
+    openTimes,
+    snsUrl,
+    userId,
   }) {
     const newReportedPlace = new ReportedPlace({
       name,
       category,
-      category_img,
-      vegan_option,
+      category_img: categoryImg,
+      vegan_option: veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      address_lot_number: addressLotNumber,
+      address_detail: addressDetail,
       location,
-      open_times,
-      sns_url,
-      user_id,
+      open_times: openTimes,
+      sns_url: snsUrl,
+      user_id: userId,
     });
     await newReportedPlace.save();
     return newReportedPlace.toObject();
@@ -38,11 +38,11 @@ const reportedPlaceRepository = {
     return await ReportedPlace.findById(id).populate('category_img').lean();
   },
   // 조건을 만족하는 제보된 장소 모두 찾기
-  async findReportedPlaces(pageNumber, pageSize, user_id) {
+  async findReportedPlaces(pageNumber, pageSize, userId) {
     let query = {};
 
-    if (user_id) {
-      query.user_id = user_id;
+    if (userId) {
+      query.user_id = userId;
     }
 
     let reportedPlaces;
@@ -70,16 +70,16 @@ const reportedPlaceRepository = {
     {
       name,
       category,
-      category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
-      user_id,
+      openTimes,
+      snsUrl,
+      userId,
     },
   ) {
     const updatedReportedPlace = await ReportedPlace.findByIdAndUpdate(
@@ -87,16 +87,16 @@ const reportedPlaceRepository = {
       {
         name,
         category,
-        category_img,
-        vegan_option,
+        category_img: categoryImg,
+        vegan_option: veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        address_lot_number: addressLotNumber,
+        address_detail: addressDetail,
         location,
-        open_times,
-        sns_url,
-        user_id,
+        open_times: openTimes,
+        sns_url: snsUrl,
+        user_id: userId,
       },
       { new: true },
     )
