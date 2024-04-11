@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const reviewValidationSchema = Joi.object({
   place_id: Joi.string().required(),
-  content: Joi.string().required(),
+  content: Joi.string().allow('').required(),
   // user_id: 토큰으로 controller에서 저장
 });
 

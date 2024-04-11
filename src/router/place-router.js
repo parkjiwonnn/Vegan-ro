@@ -24,7 +24,7 @@ placeRouter.post(
   '/admin/places',
   authMiddleware.isAuthenticated,
   authMiddleware.isAdmin,
-  validationMiddleware.validatePlace,
+  validationMiddleware.validateRequest,
   placeController.postPlace,
 );
 
@@ -33,7 +33,7 @@ placeRouter.put(
   '/admin/places/:placeId',
   authMiddleware.isAuthenticated,
   authMiddleware.isAdmin,
-  validationMiddleware.validatePlace,
+  validationMiddleware.validateRequest,
   placeController.putPlace,
 );
 
