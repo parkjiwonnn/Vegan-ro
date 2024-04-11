@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const config = require('./config');
 const passport = require('passport');
 const passportConfig = require('./passport');
+const errorHandlerMiddleware = require('../src/middleware/errorhandler-middleware');
 const path = require('path');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
@@ -56,7 +57,7 @@ const userRouter = require('./router/user-router');
 
 app.use('/api', apiRouter);
 app.use('/auth', userRouter);
-
+app.use(errorHandlerMiddleware);
 passportConfig(passport);
 
 //connect to mongodb
