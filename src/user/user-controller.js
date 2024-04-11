@@ -83,11 +83,10 @@ const userController = {
   async putUserInfo(req, res, next) {
     try {
       const email = req.user.email;
-      const { nickname, tag, tag_img } = req.body;
+      const { nickname, tag } = req.body;
       const user = await userService.updateUserInfo(email, {
         nickname,
         tag,
-        tag_img,
       });
       res.json(errors.buildResponse(user));
     } catch (error) {

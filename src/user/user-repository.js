@@ -47,11 +47,13 @@ class UserRepository {
   }
 
   //회원 정보 수정
-  async updateByEmail(email, data) {
+  async updateByEmail(email, { nickname, tag ,tag_img }) {
     try {
-      const updatedUser = await User.findOneAndUpdate({ email }, data, {
+      const updatedUser = await User.findOneAndUpdate({ email } , { nickname, tag ,tag_img }, {
         new: true,
-      }).lean();
+      },
+    ).populate('tag_img')
+    .lean();
       return updatedUser;
     } catch (error) {
       throw new Error(error);

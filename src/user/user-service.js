@@ -1,6 +1,7 @@
 const userRepository = require('./user-repository');
 const AppError = require('../errors/AppError');
 const commonErrors = require('../errors/commonErrors');
+const imageRepository = require('../image/image-repository.js');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
 
@@ -40,7 +41,7 @@ class UserService {
   }
 
   // 회원정보수정
-  async updateUserInfo(email, { nickname, tag, tag_img }) {
+  async updateUserInfo(email, { nickname, tag }) {
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
@@ -50,7 +51,7 @@ class UserService {
         404,
       );
     }
-
+    const tag_img = await imageRepository.getImageByName(tag);
     const updatedUserInfo = await userRepository.updateByEmail(email, {
       nickname,
       tag,
