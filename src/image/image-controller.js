@@ -1,5 +1,5 @@
 const imageService = require('./image-service');
-const errors = require('../errors/responseFormat');
+const responseFormat = require('../errors/responseFormat');
 
 
 const imageController = {
@@ -9,7 +9,7 @@ const imageController = {
     try {
         const { name, url } = req.body;
         const newImage = await imageService.createImage({ name, url });
-      res.json(errors.buildResponse(newImage));
+      res.json(responseFormat.buildResponse(newImage));
     } catch (error) {
       next(error);
     }
@@ -20,7 +20,7 @@ const imageController = {
         const { imageId } = req.params;
         const image = req.body;
         const updatedImage = await imageService.updateImage(imageId, image);
-      res.json(errors.buildResponse(updatedImage));
+      res.json(responseFormat.buildResponse(updatedImage));
     } catch (error) {
       next(error);
     }
@@ -31,7 +31,7 @@ const imageController = {
     try {
       const { imageId } = req.params;
       const deletedImage = await imageService.deleteImage(imageId);
-      res.json(errors.buildResponse(deletedImage));
+      res.json(responseFormat.buildResponse(deletedImage));
     } catch (error) {
       next(error);
     }
@@ -50,7 +50,7 @@ async getImages(req, res, next) {
             images = await imageService.getImages(req.query);
         }
 
-      res.json(errors.buildResponse(images));
+      res.json(responseFormat.buildResponse(images));
     } catch (error) {
       next(error);
     }
@@ -60,7 +60,7 @@ async getImageById(req, res, next) {
   try {
     const { imageId } = req.params;
     const imageinfo = await imageService.getImageById(imageId);
-    res.json(errors.buildResponse(imageinfo));
+    res.json(responseFormat.buildResponse(imageinfo));
   } catch (error) {
     next(error);
   }
@@ -70,7 +70,7 @@ async getImageByName(req, res, next) {
   try {
     const { name } = req.query;
     const imageinfo1 = await imageService.getImageByName(name);
-    res.json(errors.buildResponse(imageinfo1));
+    res.json(responseFormat.buildResponse(imageinfo1));
   } catch (error) {
     next(error);
   }

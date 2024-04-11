@@ -1,5 +1,5 @@
 const userService = require('./user-service');
-const errors = require('../errors/responseFormat');
+const responseFormat = require('../errors/responseFormat');
 const userRepository = require('./user-repository');
 const AppError = require('../errors/AppError');
 const commonErrors = require('../errors/commonErrors');
@@ -62,7 +62,7 @@ const userController = {
         email,
       });
       // res.status(201).json(utils.buildResponse(token));
-      res.status(201).json(errors.buildResponse({ token: `Bearer ${token}` }));
+      res.status(201).json(responseFormat.buildResponse({ token: `Bearer ${token}` }));
     } catch (e) {
       next(e);
     }
@@ -73,7 +73,7 @@ const userController = {
     try {
       const email = req.user.email;
       const userInfo = await userService.getUserInfo(email);
-      res.json(errors.buildResponse(userInfo));
+      res.json(responseFormat.buildResponse(userInfo));
     } catch (error) {
       next(error);
     }
@@ -88,7 +88,7 @@ const userController = {
         nickname,
         tag,
       });
-      res.json(errors.buildResponse(user));
+      res.json(responseFormat.buildResponse(user));
     } catch (error) {
       next(error);
     }
@@ -99,7 +99,7 @@ const userController = {
     try {
       const email = req.user.email;
       const user = await userService.patchUserInfo(email);
-      res.json(errors.buildResponse(user));
+      res.json(responseFormat.buildResponse(user));
     } catch (error) {
       next(error);
     }
@@ -109,7 +109,7 @@ const userController = {
   async getUsers(req, res, next) {
     try {
       const users = await userService.getUsers();
-      res.json(errors.buildResponse(users));
+      res.json(responseFormat.buildResponse(users));
     } catch (e) {
       console.log('회원목록을 불러오지 못했습니다.');
       next(e);
@@ -121,7 +121,7 @@ const userController = {
     try {
       const { userId } = req.params;
       const user = await userService.deleteUser(userId);
-      res.json(errors.buildResponse(user));
+      res.json(responseFormat.buildResponse(user));
     } catch (error) {
       next(error);
     }
