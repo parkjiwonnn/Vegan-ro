@@ -33,16 +33,24 @@ const placeRepository = {
   },
   // id로 장소 찾기
   async findPlaceById(id) {
-    return await Place.findById(id).populate('category_img').lean();
+    // deleted_at이 null인 데이터만 가져오기
+    return await Place.findOne({ _id: id, deleted_at: { $eq: null } })
+      .populate('category_img')
+      .lean();
   },
   // 장소이름 또는 주소에 검색어를 포함하는 장소 모두 찾기
   async findPlacesByKeyword(query, pageNumber, pageSize) {
     return await Place.find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { address: { $regex: query, $options: 'i' } },
-        { address_lot_number: { $regex: query, $options: 'i' } },
-        { address_detail: { $regex: query, $options: 'i' } },
+      $and: [
+        {
+          $or: [
+            { name: { $regex: query, $options: 'i' } },
+            { address: { $regex: query, $options: 'i' } },
+            { address_lot_number: { $regex: query, $options: 'i' } },
+            { address_detail: { $regex: query, $options: 'i' } },
+          ],
+        },
+        { deleted_at: { $eq: null } }, // deleted_at이 null인 데이터만 포함
       ],
     })
       .populate('category_img')
@@ -59,7 +67,7 @@ const placeRepository = {
     category,
     vegan_option,
   ) {
-    let query = {};
+    let query = { deleted_at: null }; // deleted_at이 null인 데이터만 포함
 
     if (center && radius) {
       const centerArray = center.split(',').map(Number);
@@ -83,21 +91,11 @@ const placeRepository = {
       query.vegan_option = vegan_option;
     }
 
-    let places;
-    // 조건이 없다면 전체 데이터 가져오기
-    if (Object.keys(query).length === 0) {
-      places = await Place.find()
-        .populate('category_img')
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
-        .exec();
-    } else {
-      places = await Place.find(query)
-        .populate('category_img')
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
-        .exec();
-    }
+    let places = await Place.find(query)
+      .populate('category_img')
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .exec();
     return places;
   },
   // 특정 id를 가진 장소 내용 덮어씌우기
@@ -144,6 +142,15 @@ const placeRepository = {
       .populate('category_img')
       .lean();
     return deletedPlace;
+  },
+  // 특정 id를 가진 장소 삭제 표시
+  async updateDeletedAt(id) {
+    const updatedPlace = await Place.findByIdAndUpdate(
+      id,
+      { deleted_at: new Date() },
+      { new: true },
+    );
+    return updatedPlace;
   },
 };
 

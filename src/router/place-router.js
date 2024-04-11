@@ -45,4 +45,12 @@ placeRouter.delete(
   placeController.deletePlace,
 );
 
+// PATCH /admin/places/:placeId
+placeRouter.patch(
+  '/admin/places/:placeId',
+  authMiddleware.isAuthenticated,
+  authMiddleware.isAdmin,
+  placeController.patchDeletedAt,
+);
+
 module.exports = placeRouter;

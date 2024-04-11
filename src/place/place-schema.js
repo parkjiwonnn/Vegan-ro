@@ -54,6 +54,10 @@ const placeSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    deleted_at: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
