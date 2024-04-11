@@ -68,6 +68,8 @@ userRouter.patch(
   userController.patchUserInfo,
 );
 
+//사용자 신고 카운트 증가
+
 //관리자 페이지 접근
 userRouter.get('/admin', authMiddleware.isAdmin);
 
