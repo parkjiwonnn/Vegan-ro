@@ -6,12 +6,10 @@ const userRepository = require('../user/user-repository.js');
 const reviewService = {
   // 새로운 리뷰 등록
   async createReview({ place_id, content, user_id }) {
-    const userInfo = await userRepository.findUserById(user_id);
     const newReview = await reviewRepository.createReview({
       place_id,
       content,
-      author: userInfo.nickname,
-      author_tag: userInfo.tag,
+      user_id,
     });
     if (newReview === null) {
       throw new AppError(
@@ -23,27 +21,23 @@ const reviewService = {
     return { message: '정상적으로 등록되었습니다.', newReview };
   },
   // 장소의 리뷰 모두 가져오기
-  async getReviews(pageNumber, pageSize, place_id) {
+  async getReviews(pageNumber, pageSize, placeId) {
+    const query = { place_id: placeId };
     const reviews = await reviewRepository.findReviews(
       pageNumber,
       pageSize,
-      place_id,
+      query,
     );
     return reviews;
   },
   // 유저의 리뷰 모두 가져오기
-  async getReviewsByUser(userId, pageNumber, pageSize) {
-    const userInfo = await userRepository.findUserById(userId);
-    if (!userInfo) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '사용자 정보를 찾을 수 없습니다',
-        400,
-      );
-    }
-    const reviews = await reviewRepository.findReviews(pageNumber, pageSize, {
-      author: userInfo.nickname,
-    });
+  async getReviewsByUser(pageNumber, pageSize, user_id) {
+    const query = { user_id: user_id };
+    const reviews = await reviewRepository.findReviews(
+      pageNumber,
+      pageSize,
+      query,
+    );
     return reviews;
   },
   // 특정 id를 가진 리뷰 내용 수정
