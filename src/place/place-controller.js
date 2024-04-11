@@ -6,7 +6,6 @@ const placeController = {
   async getPlace(req, res, next) {
     try {
       const { placeId } = req.params;
-      // req.body에 현재위치 받아오기
       const place = await placeService.getPlace(placeId);
       res.json(responseFormat.buildResponse(place));
     } catch (error) {
