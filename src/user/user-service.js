@@ -20,7 +20,7 @@ class UserService {
     const tokenPayload = {
       userId: user._id,
       email: user.email,
-      is_admin: user.is_admin
+      isAdmin: user.is_admin
     };
 
     const encodedToken = await new Promise((resolve, reject) => {
@@ -51,11 +51,11 @@ class UserService {
         404,
       );
     }
-    const tag_img = await imageRepository.getImageByName(tag);
+    const tagImg = await imageRepository.getImageByName(tag);
     const updatedUserInfo = await userRepository.updateByEmail(email, {
       nickname,
       tag,
-      tag_img,
+      tagImg,
     });
 
     return {

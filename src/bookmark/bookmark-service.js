@@ -10,8 +10,8 @@ class BookmarkService  {
         }
     
     // 북마크 추가 (유저) 
-      async createBookmark({user_id,place_id}) {
-        const existingBookmark = await bookmarkRepository.getBookmarkByUserIdAndPlaceId({ user_id, place_id });
+      async createBookmark({userId, placeId}) {
+        const existingBookmark = await bookmarkRepository.getBookmarkByUserIdAndPlaceId({userId, placeId });
 
         if (existingBookmark) {
             throw new AppError(
@@ -20,7 +20,7 @@ class BookmarkService  {
                 400,
             );
         }
-          const newBookmark = await bookmarkRepository.createBookmark({user_id,place_id });
+          const newBookmark = await bookmarkRepository.createBookmark({ userId, placeId });
         if (newBookmark === null) {
           throw new AppError(
             commonErrors.objectCreationError,
