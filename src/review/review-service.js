@@ -1,15 +1,14 @@
 const reviewRepository = require('./review-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
-const userRepository = require('../user/user-repository.js');
 
 const reviewService = {
   // 새로운 리뷰 등록
-  async createReview({ place_id, content, user_id }) {
+  async createReview({ placeId, content, userId }) {
     const newReview = await reviewRepository.createReview({
-      place_id,
+      placeId,
       content,
-      user_id,
+      userId,
     });
     if (newReview === null) {
       throw new AppError(
@@ -20,23 +19,13 @@ const reviewService = {
     }
     return { message: '정상적으로 등록되었습니다.', newReview };
   },
-  // 장소의 리뷰 모두 가져오기
-  async getReviews(pageNumber, pageSize, placeId) {
-    const query = { place_id: placeId };
+  // 조건에 맞는 리뷰 모두 가져오기
+  async getReviews(pageNumber, pageSize, placeId, userId) {
     const reviews = await reviewRepository.findReviews(
       pageNumber,
       pageSize,
-      query,
-    );
-    return reviews;
-  },
-  // 유저의 리뷰 모두 가져오기
-  async getReviewsByUser(pageNumber, pageSize, user_id) {
-    const query = { user_id: user_id };
-    const reviews = await reviewRepository.findReviews(
-      pageNumber,
-      pageSize,
-      query,
+      placeId,
+      userId,
     );
     return reviews;
   },
