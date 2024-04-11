@@ -5,28 +5,28 @@ const placeRepository = {
   async createPlace({
     name,
     category,
-    category_img,
-    vegan_option,
+    categoryImg,
+    veganOption,
     tel,
     address,
-    address_lot_number,
-    address_detail,
+    addressLotNumber,
+    addressDetail,
     location,
-    open_times,
-    sns_url,
+    openTimes,
+    snsUrl,
   }) {
     const newPlace = new Place({
       name,
       category,
-      category_img,
-      vegan_option,
+      category_img: categoryImg,
+      vegan_option: veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      address_lot_number: addressLotNumber,
+      address_detail: addressDetail,
       location,
-      open_times,
-      sns_url,
+      open_times: openTimes,
+      sns_url: snsUrl,
     });
     await newPlace.save();
     return newPlace.toObject();
@@ -65,7 +65,7 @@ const placeRepository = {
     pageNumber,
     pageSize,
     category,
-    vegan_option,
+    veganOption,
   ) {
     let query = { deleted_at: null }; // deleted_at이 null인 데이터만 포함
 
@@ -87,8 +87,8 @@ const placeRepository = {
       query.category = category;
     }
 
-    if (vegan_option) {
-      query.vegan_option = vegan_option;
+    if (veganOption) {
+      query.vegan_option = veganOption;
     }
 
     let places = await Place.find(query)
@@ -104,15 +104,15 @@ const placeRepository = {
     {
       name,
       category,
-      category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_lot_number,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
+      openTimes,
+      snsUrl,
     },
   ) {
     const updatedPlace = await Place.findByIdAndUpdate(
@@ -120,15 +120,15 @@ const placeRepository = {
       {
         name,
         category,
-        category_img,
-        vegan_option,
+        category_img: categoryImg,
+        vegan_option: veganOption,
         tel,
         address,
-        address_lot_number,
-        address_detail,
+        address_lot_number: addressLotNumber,
+        address_detail: addressDetail,
         location,
-        open_times,
-        sns_url,
+        open_times: openTimes,
+        sns_url: snsUrl,
       },
       { new: true },
     )
