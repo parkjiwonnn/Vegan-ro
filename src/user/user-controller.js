@@ -19,10 +19,10 @@ const userController = {
         nickname,
         phone,
         tag,
-        tag_img,
-        is_admin,
+        tagImg,
+        isAdmin,
         complaint,
-        deleted_at,
+        deletedAt,
       } = req.body;
   
       // 이메일 중복 확인
@@ -42,10 +42,10 @@ const userController = {
         nickname,
         phone,
         tag,
-        tag_img,
-        is_admin,
+        tagImg,
+        isAdmin,
         complaint,
-        deleted_at,
+        deletedAt,
       });
   
       res.json({ message: '회원가입이 완료되었습니다.', newUser });

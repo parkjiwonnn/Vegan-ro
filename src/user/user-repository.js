@@ -47,9 +47,9 @@ class UserRepository {
   }
 
   //회원 정보 수정
-  async updateByEmail(email, { nickname, tag ,tag_img }) {
+  async updateByEmail(email, { nickname, tag ,tagImg }) {
     try {
-      const updatedUser = await User.findOneAndUpdate({ email } , { nickname, tag ,tag_img }, {
+      const updatedUser = await User.findOneAndUpdate({ email } , { nickname, tag , tag_img: tagImg }, {
         new: true,
       },
     ).populate('tag_img')

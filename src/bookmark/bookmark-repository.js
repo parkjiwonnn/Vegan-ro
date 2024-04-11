@@ -23,11 +23,11 @@ class BookmarkRepository {
   }
 
   // 북마크 추가 (유저)
-  async createBookmark({ user_id, place_id }) {
+  async createBookmark({ userId, placeId }) {
     try {
       const newbookmark = await Bookmark.create({
-        user_id,
-        place_id,
+        user_id: userId, 
+        place_id: placeId,
       });
       await newbookmark.save();
       return newbookmark.toObject();
@@ -37,9 +37,9 @@ class BookmarkRepository {
   }
 
   // 북마크 추가시 중복 불가
-  async getBookmarkByUserIdAndPlaceId({ user_id, place_id }) {
+  async getBookmarkByUserIdAndPlaceId({ userId, placeId }) {
     try {
-      const bookmark = await Bookmark.findOne({ user_id, place_id });
+      const bookmark = await Bookmark.findOne({ user_id: userId, place_id: placeId,});
       return bookmark;
     } catch (error) {
       throw new Error(error);
