@@ -1,6 +1,8 @@
 const userService = require('./user-service');
 const errors = require('../errors/responseFormat');
 const userRepository = require('./user-repository');
+const AppError = require('../errors/AppError');
+const commonErrors = require('../errors/commonErrors');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
 
@@ -22,6 +24,17 @@ const userController = {
         complaint,
         deleted_at,
       } = req.body;
+  
+      // 이메일 중복 확인
+      const existingUser = await userRepository.findByEmail(email);
+      if (existingUser) {
+        throw new AppError(
+          commonErrors.objectCreationError,
+          '이미 사용 중인 이메일입니다.',
+          400,
+        );
+      }
+  
       const newUser = await userRepository.createUser({
         email,
         password,
@@ -34,12 +47,13 @@ const userController = {
         complaint,
         deleted_at,
       });
-
-      res.status(201).json(utils.buildResponse(newUser));
-    } catch (e) {
-      next(e);
+  
+      res.json({ message: '회원가입이 완료되었습니다.', newUser });
+    } catch (error) {
+      next(error);
     }
   },
+  
   //로그인
   async postSignIn(req, res, next) {
     try {
@@ -106,7 +120,7 @@ const userController = {
   // 관리자 회원 삭제
   async deleteUser(req, res, next) {
     try {
-      const userId = req.user._id;
+      const { userId } = req.params;
       const user = await userService.deleteUser(userId);
       res.json(errors.buildResponse(user));
     } catch (error) {
