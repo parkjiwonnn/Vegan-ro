@@ -6,26 +6,12 @@ const errors = require('../errors/responseFormat');
 const JWT_SECRET = config.JWT_SECRET;
 
 const authenticate = (req, res, next) => {
-  passport.authenticate('kakao', (err, user) => {
+  passport.authenticate('kakao', (err, token) => {
     if (err) return next(err);
-    if (!user) {
+    if (!token) {
       return res.redirect('/login'); // 로그인 실패 시 리다이렉트할 URL
     }
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      const token = jwt.sign(
-        {
-          userId: user._id,
-          email: user.email,
-          nickname: user.nickname,
-          is_admin:user.is_admin
-
-        },
-        process.env.JWT_SECRET,
-      );
-      res.locals.token = token; // 로컬 변수에 토큰 저장
-      return next();
-    });
+    next();
   })(req, res, next);
 };
 

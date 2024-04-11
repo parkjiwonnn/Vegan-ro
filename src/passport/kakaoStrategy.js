@@ -30,7 +30,6 @@ module.exports = () => {
               {
                 userId: exUser._id,
                 email: exUser.email,
-                nickname: exUser.nickname,
                 is_admin: exUser.is_admin
               },
               JWT_SECRET,
@@ -43,16 +42,12 @@ module.exports = () => {
           // 새로운 사용자일 경우
           const newUser = await UserRepository.createUser({
             email: profile._json.kakao_account.email,
-            name: profile._json.kakao_account.name,
-            nickname: profile._json.properties.nickname,
-            phone: profile._json.kakao_account.phone_number,
           });
 
           const token = jwt.sign(
             {
               userId: newUser._id,
               email: newUser.email,
-              nickname: newUser.nickname,
               is_admin: newUser.is_admin
             },
             JWT_SECRET,

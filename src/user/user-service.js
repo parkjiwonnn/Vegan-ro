@@ -19,7 +19,6 @@ class UserService {
     const tokenPayload = {
       userId: user._id,
       email: user.email,
-      nickname: user.nickname,
       is_admin: user.is_admin
     };
 

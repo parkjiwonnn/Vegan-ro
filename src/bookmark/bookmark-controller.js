@@ -5,8 +5,12 @@ const bookmarkController = {
 // 북마크 전체 조회 (유저)
 async getBookmarksByUserId(req, res, next) {
     try {
-      const user_id = req.user.id;
-      const bookmarks = await bookmarkService.getBookmarksByUserId(user_id);
+      const { pageNumber, pageSize } = req.query;
+      const bookmarks = await bookmarkService.getBookmarksByUserId(
+        req.user.userId,
+        pageNumber,
+        pageSize,
+      );
       res.json(errors.buildResponse(bookmarks));
     } catch (error) {
       next(error);

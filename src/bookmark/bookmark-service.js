@@ -4,8 +4,8 @@ const commonErrors = require('../errors/commonErrors.js');
 
 const bookmarkService = {
     // 북마크 전체 조회 (유저)
-    async getBookmarksByUserId(user_id) {
-        const bookmarks = await bookmarkRepository.getBookmarksByUserId(user_id);
+    async getBookmarksByUserId(userId, pageNumber, pageSize) {
+        const bookmarks = await bookmarkRepository.getBookmarksByUserId(userId, pageNumber, pageSize);
         if (bookmarks.length === 0) {
             throw new AppError(
               commonErrors.resourceNotFoundError,
