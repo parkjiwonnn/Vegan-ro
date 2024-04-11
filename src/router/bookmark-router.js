@@ -6,7 +6,7 @@ const validationMiddleware = require('../middleware/validation-middleware');
 
 
 // 북마크 전체 조회 (유저)
-bookmarkRouter.get('/bookmarks/users/me',authMiddleware.isAuthenticated, bookmarkController.getBookmarksByUserId);
+bookmarkRouter.get('/bookmarks/me',authMiddleware.isAuthenticated, bookmarkController.getBookmarksByUserId);
 
 // 북마크 추가 (유저)
 bookmarkRouter.post('/bookmarks',validationMiddleware.validateBookmark,authMiddleware.isAuthenticated, bookmarkController.postBookmark);

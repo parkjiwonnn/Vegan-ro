@@ -6,13 +6,6 @@ const bookmarkService = {
     // 북마크 전체 조회 (유저)
     async getBookmarksByUserId(userId, pageNumber, pageSize) {
         const bookmarks = await bookmarkRepository.getBookmarksByUserId(userId, pageNumber, pageSize);
-        if (bookmarks.length === 0) {
-            throw new AppError(
-              commonErrors.resourceNotFoundError,
-              '해당 조건을 만족하는 북마크가 존재하지 않습니다',
-              400,
-            );
-          }
           return bookmarks;
         },
     
