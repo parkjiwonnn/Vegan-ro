@@ -20,8 +20,8 @@ async getBookmarksByUserId(req, res, next) {
 // 북마크 추가 (유저)
   async postBookmark(req, res, next) {
     try {
-     const { user_id,place_id } = req.body;
-      const newBookmark = await bookmarkService.createBookmark({user_id,place_id});
+      const { place_id } = req.body; 
+      const newBookmark = await bookmarkService.createBookmark({ place_id, user_id: req.user.userId, });
       res.json(errors.buildResponse(newBookmark));
     } catch (error) {
       next(error);

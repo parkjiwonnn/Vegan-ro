@@ -2,12 +2,12 @@ const bookmarkRepository = require('./bookmark-repository');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
 
-const bookmarkService = {
+class BookmarkService  {
     // 북마크 전체 조회 (유저)
     async getBookmarksByUserId(userId, pageNumber, pageSize) {
         const bookmarks = await bookmarkRepository.getBookmarksByUserId(userId, pageNumber, pageSize);
           return bookmarks;
-        },
+        }
     
     // 북마크 추가 (유저) 
       async createBookmark({user_id,place_id}) {
@@ -29,7 +29,7 @@ const bookmarkService = {
           );
         }
         return { message: '정상적으로 등록되었습니다.', newBookmark };
-      },
+      }
     
      // 북마크 삭제 (유저)
       async deleteBookmark(id) {
@@ -43,7 +43,7 @@ const bookmarkService = {
           }
       
           return { message: '북마크정보가 성공적으로 삭제되었습니다.', deletedBookmark };
-        },
+        }
     
     // 북마크 많은 순으로 정렬(장소)
     async getMostBookmarkedPlaces() {
@@ -58,8 +58,8 @@ const bookmarkService = {
         }
         
         return mostBookmarkedPlaces;
-    },
-};
+    }
+}
     
       
-module.exports = bookmarkService;
+module.exports = new BookmarkService();
