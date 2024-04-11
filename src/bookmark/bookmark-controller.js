@@ -1,5 +1,5 @@
 const bookmarkService = require('./bookmark-service');
-const errors = require('../errors/responseFormat');
+const responseFormat = require('../errors/responseFormat');
 
 const bookmarkController = {
 // 북마크 전체 조회 (유저)
@@ -11,7 +11,7 @@ async getBookmarksByUserId(req, res, next) {
         pageNumber,
         pageSize,
       );
-      res.json(errors.buildResponse(bookmarks));
+      res.json(responseFormat.buildResponse(bookmarks));
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ async getBookmarksByUserId(req, res, next) {
     try {
       const { place_id } = req.body; 
       const newBookmark = await bookmarkService.createBookmark({ place_id, user_id: req.user.userId, });
-      res.json(errors.buildResponse(newBookmark));
+      res.json(responseFormat.buildResponse(newBookmark));
     } catch (error) {
       next(error);
     }
@@ -33,7 +33,7 @@ async getBookmarksByUserId(req, res, next) {
     try {
       const { bookmarkId } = req.params;
       const deletedBookmark = await bookmarkService.deleteBookmark(bookmarkId);
-      res.json(errors.buildResponse(deletedBookmark));
+      res.json(responseFormat.buildResponse(deletedBookmark));
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ async getBookmarksByUserId(req, res, next) {
   async getMostBookmarkedPlaces(req, res, next) {
     try {
         const mostBookmarkedPlaces = await bookmarkService.getMostBookmarkedPlaces();
-      res.json(errors.buildResponse(mostBookmarkedPlaces));
+      res.json(responseFormat.buildResponse(mostBookmarkedPlaces));
     } catch (error) {
       next(error);
     }
