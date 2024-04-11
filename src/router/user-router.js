@@ -40,10 +40,18 @@ userRouter.get('/kakao/logout', (req, res) => {
 });
 
 // 회원가입
-userRouter.post('/signup',validationMiddleware.validateRegister, userController.createUser);
+userRouter.post(
+  '/signup',
+  validationMiddleware.validateRequest,
+  userController.createUser,
+);
 
 // 로그인
-userRouter.post('/login',validationMiddleware.validateRegister, userController.postSignIn);
+userRouter.post(
+  '/login',
+  validationMiddleware.validateRequest,
+  userController.postSignIn,
+);
 
 // 회원 정보 조회
 userRouter.get(
@@ -55,16 +63,16 @@ userRouter.get(
 // 회원 정보 수정
 userRouter.put(
   '/users/me',
-  validationMiddleware.validateUser,
   authMiddleware.isAuthenticated,
+  validationMiddleware.validateRequest,
   userController.putUserInfo,
 );
 
 // 회원 탈퇴
 userRouter.patch(
   '/users/me/withdrawal',
-  validationMiddleware.validateUser,
   authMiddleware.isAuthenticated,
+  validationMiddleware.validateRequest,
   userController.patchUserInfo,
 );
 
