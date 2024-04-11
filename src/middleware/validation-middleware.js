@@ -9,68 +9,56 @@ const bookmarkValidationSchema = require('./validation/bookmark-validation-schem
 const imageValidationSchema = require('./validation/image-validation-schema');
 const registerValidationSchema = require('./validation/register-validation-schema');
 
-function validatePlace(req, res, next) {
-  const { error, value } = placeValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
+const AppError = require('../errors/AppError');
+const commonErrors = require('../errors/commonErrors');
+const _ = require('lodash');
 
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
+function getPath(path) {
+  const t = path.slice('api');
+  switch (t) {
+    case '/admin/places':
+      return placeValidationSchema;
+    case '/admin/places/:placeId':
+      return placeValidationSchema;
+    case '/reports':
+      return reportedPlaceValidationSchema;
+    case '/reports/:reportedPlaceId':
+      return reportedPlaceValidationSchema;
+    case '/reviews':
+      return reviewValidationSchema;
+    case '/reviews/:reviewId':
+      return patchReviewValidationSchema;
+    case '/users/me':
+      return userValidationSchema;
+    case '/signup':
+      return registerValidationSchema;
+    case '/login':
+      return registerValidationSchema;
+    case '/admin':
+      return imageValidationSchema;
+    case '/admin/images/:imageId':
+      return imageValidationSchema;
+    case '/bookmarks':
+      return bookmarkValidationSchema;
+    default:
+      return null;
   }
-  // 유효성 검사를 통과한 데이터를 req.body에 대체
-  req.body = value;
-  next();
 }
 
-function validateReportedPlace(req, res, next) {
-  const { error, value } = reportedPlaceValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
-  }
-  // 유효성 검사를 통과한 데이터를 req.body에 대체
-  req.body = value;
-  next();
+function convertSnakeToCamelCase(obj) {
+  return _.mapKeys(obj, (value, key) => _.camelCase(key));
 }
 
-function validateReview(req, res, next) {
-  const { error, value } = reviewValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
+function validateRequest(req, res, next) {
+  const schema = getPath(req.path);
+  if (!schema) {
+    throw new AppError(
+      commonErrors.resourceNotFoundError,
+      '잘못된 URL 입니다.',
+      404,
+    );
   }
-  // 유효성 검사를 통과한 데이터를 req.body에 대체
-  req.body = value;
-  next();
-}
-
-function validatePatchReview(req, res, next) {
-  const { error, value } = patchReviewValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
-  }
-  // 유효성 검사를 통과한 데이터를 req.body에 대체
-  req.body = value;
-  next();
-}
-
-function validateRegister(req, res, next) {
-  const { error, value } = registerValidationSchema.validate(req.body, {
+  const { error, value } = schema.validate(req.body, {
     abortEarly: false,
   });
 
@@ -80,62 +68,12 @@ function validateRegister(req, res, next) {
       .json({ error: error.details.map((detail) => detail.message) });
   }
 
-  req.body = value; // 유효성 검사를 통과한 데이터를 req.body에 대체
-  next();
-}
+  const reqBody = convertSnakeToCamelCase(value);
 
-function validateUser(req, res, next) {
-  const { error, value } = userValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
-  }
-
-  req.body = value; // 유효성 검사를 통과한 데이터를 req.body에 대체
-  next();
-}
-
-function validateBookmark(req, res, next) {
-  const { error, value } = bookmarkValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
-  }
-
-  req.body = value; // 유효성 검사를 통과한 데이터를 req.body에 대체
-  next();
-}
-
-function validateImage(req, res, next) {
-  const { error, value } = imageValidationSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    return res
-      .status(400)
-      .json({ error: error.details.map((detail) => detail.message) });
-  }
-
-  req.body = value; // 유효성 검사를 통과한 데이터를 req.body에 대체
+  req.body = reqBody;
   next();
 }
 
 module.exports = {
-  validatePlace,
-  validateReportedPlace,
-  validateReview,
-  validatePatchReview,
-  validateUser,
-  validateBookmark,
-  validateImage,
-  validateRegister,
+  validateRequest,
 };
