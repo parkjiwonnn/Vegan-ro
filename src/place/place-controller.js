@@ -126,6 +126,16 @@ const placeController = {
       next(error);
     }
   },
+  // 장소 삭제 여부 PATCH
+  async patchDeletedAt(req, res, next) {
+    try {
+      const { placeId } = req.params;
+      const updatedPlace = await placeService.updateDeletedAt(placeId);
+      res.json(responseFormat.buildResponse(updatedPlace));
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = placeController;

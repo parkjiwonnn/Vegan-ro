@@ -19,6 +19,7 @@ const placeValidationSchema = Joi.object({
     .required(),
   open_times: Joi.array().items(Joi.string()).default([]),
   sns_url: Joi.array().items(Joi.string()).default([]),
+  // deleted_at: repository에서 new Date() 값을 저장
 });
 
 module.exports = placeValidationSchema;

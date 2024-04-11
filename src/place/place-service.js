@@ -110,6 +110,15 @@ const placeService = {
       sns_url,
     },
   ) {
+    // id가 deleted_at이 null이고, 존재하는 id인지 확인
+    const existingPlace = await placeRepository.findPlaceById(id);
+    if (!existingPlace) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 id를 갖는 장소가 없습니다.',
+        400,
+      );
+    }
     // category_img 이미지 컬렉션에서 가져오기
     const category_img = await imageRepository.getImageByName(category);
     const updatedPlace = await placeRepository.updatePlace(id, {
@@ -125,6 +134,25 @@ const placeService = {
       open_times,
       sns_url,
     });
+    return { message: '정상적으로 수정되었습니다.', updatedPlace };
+  },
+  // 특정 id를 가진 장소 삭제
+  async deletePlace(id) {
+    // id가 deleted_at이 null이고, 존재하는 id인지 확인
+    const existingPlace = await placeRepository.findPlaceById(id);
+    if (!existingPlace) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 id를 갖는 장소가 없습니다.',
+        400,
+      );
+    }
+    const deletedPlace = await placeRepository.deletePlace(id);
+    return { message: '정상적으로 삭제되었습니다.', deletedPlace };
+  },
+  // 특정 id를 가진 장소 삭제 날짜 표시
+  async updateDeletedAt(id) {
+    const updatedPlace = await placeRepository.updateDeletedAt(id);
     if (updatedPlace === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -132,19 +160,7 @@ const placeService = {
         400,
       );
     }
-    return { message: '정상적으로 수정되었습니다.', updatedPlace };
-  },
-  // 특정 id를 가진 장소 삭제
-  async deletePlace(id) {
-    const deletedPlace = await placeRepository.deletePlace(id);
-    if (deletedPlace === null) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 id를 갖는 장소가 없습니다.',
-        400,
-      );
-    }
-    return { message: '정상적으로 삭제되었습니다.', deletedPlace };
+    return { message: '정상적으로 삭제되었습니다.', updatedPlace };
   },
 };
 
