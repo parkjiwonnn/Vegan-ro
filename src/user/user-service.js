@@ -4,19 +4,43 @@ const commonErrors = require('../errors/commonErrors');
 const imageRepository = require('../image/image-repository.js');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+
+const JWT_SECRET = config.JWT_SECRET;
 
 class UserService {
+// 회원 가입
+async signUp({ email,plainPassword }) {
+  //이메일로 기존 유저 여부
+  const existingUser = await userRepository.findByEmail(email);
+  if (existingUser !== null) {
+    throw new AppError(commonErrors.inputError, "중복 된 이메일 입니다.", 400);
+  }
+  const hashedPassword = await bcrypt.hash(plainPassword, 8);
+  const newUser = await userRepository.createUser({email,password: hashedPassword});
+
+  return { message: "회원가입이 성공적으로 완료되었습니다.", newUser };
+}
+
+
   //로그인
-  async signIn({ email }) {
+  async signIn({ email, plainPassword }) {
     const user = await userRepository.findByEmail(email);
     if (user === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
-        '이메일 또는 비밀번호를 다시 확인해주세요', //유저가 없는 경우더라도 보안을 위해 이메일과 비밀번호 체크해달라는 에러 던지기
+        '이메일 또는 비밀번호를 다시 확인해주세요', 
         400,
       );
     }
-
+    const isPasswordValid = await bcrypt.compare(plainPassword, user.password);
+    if (!isPasswordValid) {
+      throw new AppError(
+        commonErrors.inputError,
+        "이메일 또는 비밀번호를 다시 확인해주세요",
+        400,
+      );
+    }
     const tokenPayload = {
       userId: user._id,
       email: user.email,
@@ -26,7 +50,7 @@ class UserService {
     const encodedToken = await new Promise((resolve, reject) => {
       jwt.sign(
         tokenPayload,
-        config.JWT_SECRET,
+        JWT_SECRET,
         //{ expiresIn: '24h' },
         (error, encoded) => {
           if (error) {

@@ -41,7 +41,7 @@ module.exports = () => {
             return done(null, token);
           }
           // 새로운 사용자일 경우
-          const newUser = await UserRepository.createUser({
+          const newUser = await UserRepository.createUserForKakao({
             email: profile._json.kakao_account.email,
           });
 

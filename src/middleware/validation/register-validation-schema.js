@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const registerValidationSchema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().optional(),
+    password: Joi.string().min(8).required(),
     name: Joi.string().optional(),
     nickname: Joi.string().optional(),
     phone: Joi.string().optional(),

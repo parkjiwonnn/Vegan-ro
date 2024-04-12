@@ -25,10 +25,12 @@ const userSchema = new mongoose.Schema(
     },
     tag: {
       type: String,
+      default: null,
     },
     tag_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
+      default: null,
     },
     complaint: {
       type: Number,
@@ -37,9 +39,11 @@ const userSchema = new mongoose.Schema(
     },
     is_admin: {
       type: Boolean,
+      default: false,
     },
     deleted_at: {
       type: Date,
+      default: null,
     },
   },
   {

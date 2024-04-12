@@ -41,7 +41,7 @@ userRouter.get('/kakao/logout', (req, res) => {
 userRouter.post(
   '/signup',
   validationMiddleware.validateRequest,
-  userController.createUser,
+  userController.postSignUp,
 );
 
 // 로그인
