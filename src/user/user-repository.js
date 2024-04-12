@@ -26,12 +26,33 @@ class UserRepository {
       throw new Error(error);
     }
   }
-  async createUser(data) {
+  //일반 회원가입
+  async createUser(data){ 
+      const { email , password } = data; 
+      const user = await User.create({
+        email,
+        password,
+        name:null,
+        nickname:null,
+        phone:null,
+        tag: null,
+        tag_img: null,
+        is_admin: false, 
+        complaint: 0,
+        deleted_at: null
+      });
+      await user.save();
+
+      return user.toObject();
+    }
+
+  //카카오 회원가입 
+  async createUserForKakao(data) {
     try {
       const { email } = data; // data 객체에서 필요한 속성 추출
       const newUser = await User.create({
         email,
-        password: null, // 비밀번호는 특별한 처리 과정을 거쳐야 할 수 있으니, 이 부분은 주의해서 다루어야 합니다.
+        password:null,
         name:null,
         nickname:null,
         phone:null,

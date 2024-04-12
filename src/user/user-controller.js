@@ -11,45 +11,14 @@ const JWT_SECRET = config.JWT_SECRET;
 
 const userController = {
   //회원가입
-  async createUser(req, res, next) {
+  async postSignUp(req, res, next) {
     try {
-      const {
+      const {email, password } = req.body;
+      const newUser = await userService.signUp({
         email,
-        password,
-        name,
-        nickname,
-        phone,
-        tag,
-        tagImg,
-        isAdmin,
-        complaint,
-        deletedAt,
-      } = req.body;
+        plainPassword: password});
   
-      // 이메일 중복 확인
-      const existingUser = await userRepository.findByEmail(email);
-      if (existingUser) {
-        throw new AppError(
-          commonErrors.objectCreationError,
-          '이미 사용 중인 이메일입니다.',
-          400,
-        );
-      }
-  
-      const newUser = await userRepository.createUser({
-        email,
-        password,
-        name,
-        nickname,
-        phone,
-        tag,
-        tagImg,
-        isAdmin,
-        complaint,
-        deletedAt,
-      });
-  
-      res.json({ message: '회원가입이 완료되었습니다.', newUser });
+      res.status(201).json(responseFormat.buildResponse(newUser));
     } catch (error) {
       next(error);
     }
@@ -58,11 +27,11 @@ const userController = {
   //로그인
   async postSignIn(req, res, next) {
     try {
-      const { email } = req.body;
+      const { email, password } = req.body;
       const token = await userService.signIn({
         email,
+        plainPassword: password,
       });
-      // res.status(201).json(utils.buildResponse(token));
       res.status(201).json(responseFormat.buildResponse({ token: `Bearer ${token}` }));
     } catch (e) {
       next(e);
