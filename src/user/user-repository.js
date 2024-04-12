@@ -1,4 +1,5 @@
 const User = require('./user-schema');
+const Review = require('../review/review-schema');
 
 class UserRepository {
   async findUserById(userId) {
@@ -75,6 +76,32 @@ class UserRepository {
       throw new Error(error);
     }
   }
+// 리뷰 아이디로부터 사용자의 ID 가져오기
+async getUserIdByReviewId(reviewId) {
+  try {
+    const review = await Review.findById(  {_id: reviewId} );
+    return review.user_id;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+async incrementComplaintById(userId) {
+  try {
+    const patchedUserComplaint = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { complaint: 1 } }, 
+      { new: true, lean: true });
+ 
+    return patchedUserComplaint;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
+
+
   //관리자 모든 회원 정보 조회
   async allUsers() {
     try {

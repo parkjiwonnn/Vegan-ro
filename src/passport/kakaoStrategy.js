@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 
 const KAKAO_ID = config.clientID;
+const KAKAO_URL = config.callbackURL;
 const JWT_SECRET = config.JWT_SECRET;
 
 module.exports = () => {
@@ -13,7 +14,7 @@ module.exports = () => {
     new KakaoStrategy(
       {
         clientID: KAKAO_ID,
-        callbackURL: '/auth/kakao/callback',
+        callbackURL: KAKAO_URL,
       },
 
       async (accessToken, refreshToken, profile, done) => {

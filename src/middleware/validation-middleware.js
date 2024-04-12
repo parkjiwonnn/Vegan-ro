@@ -26,6 +26,8 @@ function getPath(path) {
       return patchReviewValidationSchema;
     case t === '/users/me':
       return userValidationSchema;
+    case t.startsWith('/users/complaint/'):
+      return userValidationSchema;
     case t === '/signup' || t === '/login':
       return registerValidationSchema;
     case t === '/admin' || t.startsWith('/admin/images/'):

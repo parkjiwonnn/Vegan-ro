@@ -1,4 +1,5 @@
 const userService = require('./user-service');
+const reviewService = require('../review/review-service');
 const responseFormat = require('../errors/responseFormat');
 const userRepository = require('./user-repository');
 const AppError = require('../errors/AppError');
@@ -93,6 +94,17 @@ const userController = {
       next(error);
     }
   },
+
+// 컨트롤러
+async patchUserComplaint(req, res, next) {
+  try {
+    const { reviewId } = req.params;
+    const patchedUserComplaint = await userService.incrementComplaintByReviewId(reviewId);
+    res.json(responseFormat.buildResponse(patchedUserComplaint));
+  } catch (error) {
+    next(error);
+  }
+},
 
   // 회원 탈퇴
   async patchUserInfo(req, res, next) {

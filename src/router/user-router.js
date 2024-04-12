@@ -9,13 +9,12 @@ const errors = require('../errors/responseFormat');
 
 const REDIRECT_URL = config.REDIRECT_URL;
 
-//* 카카오 로그인 라우터 /kakao로 요청오면, 카카오 로그인 페이지로 이동, 카카오 서버를 통해 카카오 로그인을 하면, 다음 라우터로 요청
+
 userRouter.get('/kakao', passport.authenticate('kakao'));
 
-// 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
+
 userRouter.get(
   '/kakao/callback',
-  //passport 로그인 전략에 의해 kakaoStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
   passport.authenticate('kakao', {
     failureRedirect: '/', // kakaoStrategy에서 실패한다면 실행
   }),
@@ -24,7 +23,6 @@ userRouter.get(
     const token = req.user; // 사용자 토큰 정보 (JWT 토큰)
     const query = '?token=' + token;
     res.locals.token = token;
-
     res.status(201).json(errors.buildResponse({ token: `Bearer ${token}` }));
   },
 );
@@ -77,7 +75,12 @@ userRouter.patch(
 );
 
 //사용자 신고 카운트 증가
-
+userRouter.patch(
+  '/users/complaint/:reviewId',
+  authMiddleware.isAuthenticated,
+  validationMiddleware.validateRequest,
+  userController.patchUserComplaint,
+);
 //관리자 페이지 접근
 userRouter.get('/admin', authMiddleware.isAdmin);
 

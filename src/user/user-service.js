@@ -85,6 +85,21 @@ class UserService {
 
     return { message: '회원정보가 성공적으로 삭제되었습니다.', patchedUser };
   }
+
+ // 리뷰 작성자의 신고 카운트 증가
+ async incrementComplaintByReviewId(reviewId) {
+    const userId = await userRepository.getUserIdByReviewId(reviewId);
+    const patchedUserComplaint = await userRepository.incrementComplaintById(userId);
+    if (!patchedUserComplaint) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 회원이 존재하지 않습니다',
+        404,
+      );
+    }
+    return { message: '리뷰 신고가 성공적으로 완료되었습니다.', patchedUserComplaint};
+  } 
+
   // 관리자 모든 회원 정보 조회
 
   async getUsers() {
