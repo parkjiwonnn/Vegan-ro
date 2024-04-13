@@ -21,13 +21,13 @@ const reviewService = {
   },
   // 조건에 맞는 리뷰 모두 가져오기
   async getReviews(pageNumber, pageSize, placeId, userId) {
-    const reviews = await reviewRepository.findReviews(
+    const { reviews, totalCount } = await reviewRepository.findReviews(
       pageNumber,
       pageSize,
       placeId,
       userId,
     );
-    return reviews;
+    return { reviews, totalCount };
   },
   // 특정 id를 가진 리뷰 내용 수정
   async updateReview(id, content) {

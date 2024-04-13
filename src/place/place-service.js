@@ -2,6 +2,7 @@ const placeRepository = require('./place-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
 const imageRepository = require('../image/image-repository.js');
+const BookmarkRepository = require('../bookmark/bookmark-repository.js');
 
 const placeService = {
   // 새로운 장소 등록
@@ -47,8 +48,8 @@ const placeService = {
     return { message: '정상적으로 등록되었습니다.', newPlace };
   },
   // 특정 id를 가진 장소 가져오기
-  async getPlace(id) {
-    const place = await placeRepository.findPlaceById(id);
+  async getPlace(placeId, userId) {
+    const place = await placeRepository.findPlaceById(placeId);
     if (place === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -56,6 +57,17 @@ const placeService = {
         400,
       );
     }
+
+    // 현재 유저가 북마크를 했는지 확인
+    if (userId) {
+      const bookmarkData =
+        await BookmarkRepository.getBookmarkByUserIdAndPlaceId({
+          userId,
+          placeId,
+        });
+      place.isBookmarked = bookmarkData !== null;
+    }
+
     return place;
   },
   // 검색어를 만족하는 장소 모두 가져오기

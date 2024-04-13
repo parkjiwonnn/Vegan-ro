@@ -15,6 +15,13 @@ reviewRouter.get(
 // GET /reviews?placeId=value&pageNumber=number&pageSize=number
 reviewRouter.get('/reviews', reviewController.getReviews);
 
+// GET /reviews/my-reviews?placeId=value&pageNumber=number&pageSize=number
+reviewRouter.get(
+  '/reviews/my-reviews',
+  authMiddleware.isAuthenticated,
+  reviewController.getReviews,
+);
+
 // GET /admin/reviews?pageNumber=number&pageSize=number
 reviewRouter.get(
   '/admin/reviews',
