@@ -11,6 +11,13 @@ placeRouter.get('/places', placeController.getPlaces);
 // GET /places/:placeId
 placeRouter.get('/places/:placeId', placeController.getPlace);
 
+// GET /places/:placeId/bookmarked
+placeRouter.get(
+  '/places/:placeId/bookmarked',
+  authMiddleware.isAuthenticated,
+  placeController.getPlace,
+);
+
 // GET /admin/places?pageSize=number&pageNumber=number
 placeRouter.get(
   '/admin/places',

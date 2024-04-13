@@ -7,13 +7,15 @@ const reviewController = {
     try {
       const { placeId, pageNumber, pageSize } = req.query;
       const userId = req.user?.userId || undefined;
-      const reviews = await reviewService.getReviews(
+      // const userId =
+      //   req.user && !req.user.isAdmin ? req.user.userId : undefined;
+      const { reviews, totalCount } = await reviewService.getReviews(
         pageNumber,
         pageSize,
         placeId,
         userId,
       );
-      res.json(responseFormat.buildResponse(reviews));
+      res.json(responseFormat.buildResponse({ reviews, totalCount }));
     } catch (error) {
       next(error);
     }
