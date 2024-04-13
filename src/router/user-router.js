@@ -1,40 +1,26 @@
 const express = require('express');
 const userRouter = express.Router();
 const userController = require('../user/user-controller');
+const userService = require('../user/user-service');
 const authMiddleware = require('../middleware/auth-middleware');
 const validationMiddleware = require('../middleware/validation-middleware');
-const passport = require('passport');
 const config = require('../config');
-const errors = require('../errors/responseFormat');
+const responseFormat = require('../errors/responseFormat');
+
 
 const REDIRECT_URL = config.REDIRECT_URL;
 
-
-userRouter.get('/kakao', passport.authenticate('kakao'));
-
-
-userRouter.get(
-  '/kakao/callback',
-  passport.authenticate('kakao', {
-    failureRedirect: '/', // kakaoStrategy에서 실패한다면 실행
-  }),
-  // kakaoStrategy에서 성공한다면 콜백 실행
-  (req, res) => {
-    const token = req.user; // 사용자 토큰 정보 (JWT 토큰)
-    const query = '?token=' + token;
-    res.locals.token = token;
-    res.status(201).json(errors.buildResponse({ token: `Bearer ${token}` }));
-  },
-);
-//회원 로그아웃
-userRouter.get('/kakao/logout', (req, res) => {
-  req.logout(function (err) {
-    if (err) {
-      console.error(err);
-      return res.redirect('/'); // 로그아웃 중 에러가 발생한 경우에 대한 처리
-    }
-    res.redirect(REDIRECT_URL); // 로그아웃 성공 시 리다이렉트
-  });
+// POST 요청 처리
+userRouter.post('/auth/kakao/login', async (req, res) => {
+  const { code } = req.body; // 프론트에서 받은 인가 코드
+  try {
+    // 컨트롤러 함수를 호출하여 요청 처리
+    const token = await userService.handleKakaoLogin(code);
+    res.status(201).json(responseFormat.buildResponse({ token: `Bearer ${token}` }));
+  } catch (error) {
+    console.error('Error processing Kakao login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // 회원가입
