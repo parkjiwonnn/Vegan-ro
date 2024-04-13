@@ -6,15 +6,92 @@ const validationMiddleware = require('../middleware/validation-middleware');
 const passport = require('passport');
 const config = require('../config');
 const errors = require('../errors/responseFormat');
-
+const axios = require('axios');
 const REDIRECT_URL = config.REDIRECT_URL;
 
+// POST 요청 처리
+userRouter.post('/auth/kakao/login', async (req, res) => {
+  const { code } = req.body; // 프론트에서 받은 인가 코드
 
-userRouter.get('/kakao', passport.authenticate('kakao'));
+  try {
+    // 카카오로부터 사용자 정보를 가져옵니다.
+    const kakaoUserInfo = await requestUserInfoFromKakao(code);
+
+    // 카카오 사용자 정보를 기반으로 우리 서비스의 토큰을 생성합니다.
+    const token = await generateTokenFromKakaoUserInfo(kakaoUserInfo);
+
+    // 생성된 토큰을 클라이언트로 전달합니다.
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error processing Kakao login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 카카오로부터 사용자 정보를 가져오는 함수
+const requestUserInfoFromKakao = async (code) => {
+  try {
+    const response = await axios.post('https://kauth.kakao.com/oauth/token', {
+      grant_type: 'authorization_code',
+      client_id: 'b3bc79737b4fcbc77096caf5a631f774', // 카카오 앱의 클라이언트 ID
+      redirect_uri: 'http://localhost:3000',
+      code: code,
+    });
+    const accessToken = response.data.access_token;
+    const userInfoResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    return userInfoResponse.data;
+  } catch (error) {
+    throw new Error('카카오 사용자 정보를 가져오는 중 에러 발생');
+  }
+};
+// 카카오 사용자 정보를 기반으로 토큰을 생성하는 함수
+const generateTokenFromKakaoUserInfo = async (kakaoUserInfo) => {
+  try {
+    const exUser = await UserRepository.findUserOne({
+      email: kakaoUserInfo.kakao_account.email,
+    });
+    // 기존 사용자일 경우
+    if (exUser) {
+      const token = jwt.sign(
+        {
+          userId: exUser._id,
+          email: exUser.email,
+          isAdmin: exUser.is_admin
+        },
+        JWT_SECRET,
+      );
+      return token;
+    }
+    // 새로운 사용자일 경우
+    const newUser = await UserRepository.createUserForKakao({
+      email: kakaoUserInfo.kakao_account.email,
+    });
+
+    const token = jwt.sign(
+      {
+        userId: newUser._id,
+        email: newUser.email,
+        isAdmin: newUser.is_admin
+      },
+      JWT_SECRET,
+    );
+    console.log('token : ' + token);
+    return token;
+  } catch (error) {
+    console.error('Error generating token from Kakao user info:', error);
+    throw new Error('토큰 생성 중 에러 발생');
+  }
+};
+
+// userRouter.get('/kakao', passport.authenticate('kakao'));
 
 
 userRouter.get(
-  '/kakao/callback',
+  '/kakao/callback/omg',
   passport.authenticate('kakao', {
     failureRedirect: '/', // kakaoStrategy에서 실패한다면 실행
   }),
@@ -22,8 +99,11 @@ userRouter.get(
   (req, res) => {
     const token = req.user; // 사용자 토큰 정보 (JWT 토큰)
     const query = '?token=' + token;
-    res.locals.token = token;
-    res.status(201).json(errors.buildResponse({ token: `Bearer ${token}` }));
+    res.cookie('token', token, {
+      sameSite: 'None',
+      secure: true
+    });
+    res.redirect('https://veganro-frontend.vercel.app');
   },
 );
 //회원 로그아웃
