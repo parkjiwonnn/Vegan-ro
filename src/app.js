@@ -41,11 +41,11 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+app.get('/auth/kakao/callback', (req, res) => {
+  res.send('사용자 인증!');
 });
 
 app.get('/api', (req, res) => {
@@ -53,12 +53,10 @@ app.get('/api', (req, res) => {
 });
 
 const apiRouter = require('./router/index');
-const userRouter = require('./router/user-router');
 
 app.use('/api', apiRouter);
-app.use('/auth', userRouter);
+
 app.use(errorHandlerMiddleware);
-passportConfig(passport);
 
 //connect to mongodb
 const MONGO_URI = config.mongoDBUri;
