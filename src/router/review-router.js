@@ -15,9 +15,9 @@ reviewRouter.get(
 // GET /reviews?placeId=value&pageNumber=number&pageSize=number
 reviewRouter.get('/reviews', reviewController.getReviews);
 
-// GET /reviews/my-reviews?placeId=value&pageNumber=number&pageSize=number
+// GET /reviews/check?placeId=value&pageNumber=number&pageSize=number
 reviewRouter.get(
-  '/reviews/my-reviews',
+  '/reviews/check',
   authMiddleware.isAuthenticated,
   reviewController.getReviews,
 );

@@ -48,7 +48,7 @@ const placeService = {
     return { message: '정상적으로 등록되었습니다.', newPlace };
   },
   // 특정 id를 가진 장소 가져오기
-  async getPlace(placeId, userId) {
+  async getPlace(placeId) {
     const place = await placeRepository.findPlaceById(placeId);
     if (place === null) {
       throw new AppError(
@@ -56,16 +56,6 @@ const placeService = {
         '해당 id를 갖는 장소가 없습니다.',
         400,
       );
-    }
-
-    // 현재 유저가 북마크를 했는지 확인
-    if (userId) {
-      const bookmarkData =
-        await BookmarkRepository.getBookmarkByUserIdAndPlaceId({
-          userId,
-          placeId,
-        });
-      place.isBookmarked = bookmarkData !== null;
     }
 
     return place;
