@@ -46,20 +46,21 @@ const reviewRepository = {
         .exec();
     }
 
+    // 조건에 맞는 데이터의 총 개수(페이지네이션X)
+    const totalCount = await Review.countDocuments(query);
+
     // 각 리뷰의 user_id와 현재 userId 비교하여 currentUser 필드 추가
     if (userId && placeId) {
       reviews = reviews.map((review) => {
         // user_id 필드에 populate를 적용했기 때문에 user_id의 _id로 비교
         const reviewUserId = review.user_id._id.toString();
         return {
-          ...review.toObject(),
-          isWrittenByCurrentUser: reviewUserId === userId,
+          // ...review.toObject(),
+          reviewId: review._id,
+          CurrentUser: reviewUserId === userId,
         };
       });
     }
-
-    // 조건에 맞는 데이터의 총 개수(페이지네이션X)
-    const totalCount = await Review.countDocuments(query);
 
     return { reviews, totalCount };
   },

@@ -6,8 +6,7 @@ const placeController = {
   async getPlace(req, res, next) {
     try {
       const { placeId } = req.params;
-      const userId = req.user?.userId || undefined;
-      const place = await placeService.getPlace(placeId, userId);
+      const place = await placeService.getPlace(placeId);
       res.json(responseFormat.buildResponse(place));
     } catch (error) {
       next(error);
