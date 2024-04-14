@@ -29,4 +29,11 @@ bookmarkRouter.delete(
 // 북마크 많은 순으로 정렬(장소)
 bookmarkRouter.get('/bookmarks', bookmarkController.getMostBookmarkedPlaces);
 
+// 북마크 확인 GET /bookmarks/check?placeId=value
+bookmarkRouter.get(
+  '/bookmarks/check',
+  authMiddleware.isAuthenticated,
+  bookmarkController.getBookmark,
+);
+
 module.exports = bookmarkRouter;

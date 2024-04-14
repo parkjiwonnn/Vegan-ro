@@ -1,7 +1,6 @@
 const Bookmark = require('./bookmark-schema');
 
 class BookmarkRepository {
-
   // 북마크 전체 조회 (유저)
   async getBookmarksByUserId(userId, pageNumber, pageSize) {
     try {
@@ -13,8 +12,8 @@ class BookmarkRepository {
           path: 'place_id',
           populate: {
             path: 'category_img',
-            model: 'Image'
-          }
+            model: 'Image',
+          },
         });
       return bookmarks;
     } catch (error) {
@@ -26,7 +25,7 @@ class BookmarkRepository {
   async createBookmark({ userId, placeId }) {
     try {
       const newbookmark = await Bookmark.create({
-        user_id: userId, 
+        user_id: userId,
         place_id: placeId,
       });
       await newbookmark.save();
@@ -39,8 +38,14 @@ class BookmarkRepository {
   // 북마크 추가시 중복 불가
   async getBookmarkByUserIdAndPlaceId({ userId, placeId }) {
     try {
-      const bookmark = await Bookmark.findOne({ user_id: userId, place_id: placeId,});
-      return bookmark;
+      const bookmark = await Bookmark.findOne({
+        user_id: userId,
+        place_id: placeId,
+      });
+      if (bookmark === null) {
+        return bookmark;
+      }
+      return bookmark._id.toString();
     } catch (error) {
       throw new Error(error);
     }
@@ -76,9 +81,9 @@ class BookmarkRepository {
             from: 'places',
             localField: '_id',
             foreignField: '_id',
-            as: 'place_info'
-          }
-        }
+            as: 'place_info',
+          },
+        },
       ]);
 
       return mostBookmarkedPlaces;
