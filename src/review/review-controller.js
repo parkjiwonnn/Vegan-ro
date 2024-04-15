@@ -6,9 +6,8 @@ const reviewController = {
   async getReviews(req, res, next) {
     try {
       const { placeId, pageNumber, pageSize } = req.query;
-      const userId = req.user?.userId || undefined;
-      // const userId =
-      //   req.user && !req.user.isAdmin ? req.user.userId : undefined;
+      const userId =
+        req.user && !req.user.isAdmin ? req.user.userId : undefined;
       const { reviews, totalCount } = await reviewService.getReviews(
         pageNumber,
         pageSize,
