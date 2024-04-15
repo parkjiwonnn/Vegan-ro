@@ -39,30 +39,18 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  const token = req.headers['authorization'].slice(7);
-
-  if (!token) {
-    return res
-      .status(401)
-      .json(errors.buildResponse({ message: '토큰이 없습니다.' }));
+  // 여기에 관리자 여부를 확인하는 로직을 추가하세요.
+  if (req.user && req.user.is_admin) {
+    next(
+      new AppError(
+        commonErrors.authorizationError,
+        '접근 권한이 없습니다.',
+        403,
+      ),
+    );
+    return;
   }
-
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res
-        .status(403)
-        .json(errors.buildResponse({ message: '토큰 인증에 실패했습니다.' }));
-    }
-
-    if (!decoded.is_admin) {
-      return res
-        .status(403)
-        .json(errors.buildResponse({ message: '접근 권한이 없습니다.' }));
-    }
-
-    req.user = decoded;  // 요청 객체에 사용자 정보 추가
-    next();
-  });
+  next();
 };
 
 module.exports = {
