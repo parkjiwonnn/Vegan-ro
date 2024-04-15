@@ -38,7 +38,7 @@ class UserService {
       const params = new URLSearchParams();
       params.append('grant_type', 'authorization_code');
       params.append('client_id', KAKAO_ID); // 카카오 앱의 클라이언트 ID
-      params.append('redirect_uri', KAKAO_URL);
+      params.append('redirect_uri', 'http://localhost:4000/auth/kakao/callback');
       params.append('code', code);
   
       const response = await axios.post('https://kauth.kakao.com/oauth/token', params.toString(), {
