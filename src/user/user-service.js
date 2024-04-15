@@ -80,6 +80,9 @@ class UserService {
             isAdmin: exUser.is_admin
           },
           JWT_SECRET,
+           {
+                expiresIn: '6h',
+              },
         );
         return token;
       }
@@ -95,6 +98,9 @@ class UserService {
           isAdmin: newUser.is_admin
         },
         JWT_SECRET,
+         {
+                expiresIn: '6h',
+              },
       );
       console.log('Generated token:', token);
       return token;
@@ -146,7 +152,7 @@ async signUp({ email,plainPassword }) {
       jwt.sign(
         tokenPayload,
         JWT_SECRET,
-        //{ expiresIn: '24h' },
+        { expiresIn: '6h' },
         (error, encoded) => {
           if (error) {
             reject(error);
