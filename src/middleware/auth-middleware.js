@@ -40,7 +40,7 @@ const isAuthenticated = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   // 여기에 관리자 여부를 확인하는 로직을 추가하세요.
-  if (req.user && req.user.is_admin) {
+  if (req.user && req.user.isAdmin) {
     next(
       new AppError(
         commonErrors.authorizationError,
