@@ -18,25 +18,31 @@ const authenticate = (req, res, next) => {
 };
 
 const isAuthenticated = (req, res, next) => {
-  const token = req.headers['authorization'].slice(7);
+  const token = req.headers['authorization']?.slice(7);
 
   if (!token) {
-    return res
-      .status(401)
-      .json(errors.buildResponse({ message: '토큰이 없습니다.' }));
+    throw new AppError(
+      commonErrors.authorizationError,
+      '토큰이 없습니다',
+      401
+    );
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res
-        .status(403)
-        .json(errors.buildResponse({ message: '토큰 인증에 실패했습니다.' }));
+      throw new AppError(
+        commonErrors.authorizationError,
+        '토큰 인증에 실패했습니다.',
+        403
+      );
     }
 
+    // 이 부분에서 검증에 성공한 경우에만 다음 미들웨어로 넘어갑니다.
     req.user = decoded; // 요청 객체에 사용자 정보 추가
     next();
   });
 };
+
 
 const isAdmin = (req, res, next) => {
   // 여기에 관리자 여부를 확인하는 로직을 추가하세요.
