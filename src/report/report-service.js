@@ -31,7 +31,7 @@ const reportedPlaceService = {
       addressDetail,
       location,
       openTimes,
-      snsUrl,
+      snsUrl: Array.isArray(snsUrl) ? snsUrl : [snsUrl],
       userId,
     });
     if (newReportedPlace === null) {

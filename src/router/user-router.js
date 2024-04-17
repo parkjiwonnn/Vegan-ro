@@ -4,11 +4,7 @@ const userController = require('../user/user-controller');
 const userService = require('../user/user-service');
 const authMiddleware = require('../middleware/auth-middleware');
 const validationMiddleware = require('../middleware/validation-middleware');
-const config = require('../config');
 const responseFormat = require('../errors/responseFormat');
-
-
-const REDIRECT_URL = config.REDIRECT_URL;
 
 // POST 요청 처리
 userRouter.post('/auth/kakao/login', async (req, res) => {
@@ -16,7 +12,9 @@ userRouter.post('/auth/kakao/login', async (req, res) => {
   try {
     // 컨트롤러 함수를 호출하여 요청 처리
     const token = await userService.handleKakaoLogin(code);
-    res.status(201).json(responseFormat.buildResponse({ token: `Bearer ${token}` }));
+    res
+      .status(201)
+      .json(responseFormat.buildResponse({ token: `Bearer ${token}` }));
   } catch (error) {
     console.error('Error processing Kakao login:', error);
     res.status(500).json({ error: 'Internal Server Error' });

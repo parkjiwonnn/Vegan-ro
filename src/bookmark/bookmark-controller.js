@@ -1,6 +1,5 @@
 const bookmarkService = require('./bookmark-service');
 const responseFormat = require('../errors/responseFormat');
-const { response } = require('express');
 
 const bookmarkController = {
   // 북마크 전체 조회 (유저)
