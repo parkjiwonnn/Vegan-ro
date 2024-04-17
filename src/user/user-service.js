@@ -174,6 +174,19 @@ class UserService {
     });
     return encodedToken;
   }
+  // 카카오 로그아웃 API 호출 함수
+async kakaoLogout(accessToken) {
+  try {
+      const response = await axios.post('https://kapi.kakao.com/v1/user/logout', null, {
+          headers: {
+              Authorization: `Bearer ${accessToken}`
+          }
+      });
+      console.log('카카오 로그아웃 성공:', response.data);
+  } catch (error) {
+      console.error('카카오 로그아웃 실패:', error.response.data);
+  }
+}
 
   // 회원정보수정
   async updateUserInfo(email, { nickname, tag }) {

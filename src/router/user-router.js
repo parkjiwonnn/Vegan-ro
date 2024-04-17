@@ -35,6 +35,24 @@ userRouter.post(
   userController.postSignIn,
 );
 
+// 로그아웃 라우터
+userRouter.get('/logout', authMiddleware.isAuthenticated, async (req, res) => {
+  try {
+    // 토큰 유효성 확인 후 클라이언트에게 응답
+    res.status(200).json({ message: '토큰이 유효합니다. 로그아웃 되었습니다.' });
+    req.token = null;
+    if (req.user.authMethod === 'kakao') {
+      // 카카오 회원 로그아웃 처리
+      const kakaoAccessToken = req.user.kakaoAccessToken; // 백엔드에서 받은 카카오 액세스 토큰
+      await userService.kakaoLogout(kakaoAccessToken);
+    }
+  } catch (error) {
+    // 토큰이 유효하지 않은 경우
+    console.error('토큰 검증 오류:', error);
+    res.status(403).json({ error: '토큰이 유효하지 않습니다.' });
+  }
+});
+
 // 회원 정보 조회
 userRouter.get(
   '/users/me',
