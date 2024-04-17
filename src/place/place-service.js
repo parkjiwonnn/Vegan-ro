@@ -2,7 +2,6 @@ const placeRepository = require('./place-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
 const imageRepository = require('../image/image-repository.js');
-const BookmarkRepository = require('../bookmark/bookmark-repository.js');
 
 const placeService = {
   // 새로운 장소 등록

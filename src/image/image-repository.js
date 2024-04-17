@@ -1,9 +1,8 @@
 const Image = require('./image-schema');
 
 const imageRepository = {
-
-// 이미지 추가
-async createImage({ name, url }) {
+  // 이미지 추가
+  async createImage({ name, url }) {
     const newImage = new Image({
       name,
       url,
@@ -14,7 +13,9 @@ async createImage({ name, url }) {
 
   // 이미지 수정
   async updateImage(id, image) {
-    const updatedImage = await Image.findByIdAndUpdate(id, image, { new: true });
+    const updatedImage = await Image.findByIdAndUpdate(id, image, {
+      new: true,
+    });
     return updatedImage;
   },
 
@@ -34,15 +35,12 @@ async createImage({ name, url }) {
   async getImageById(id) {
     const imageinfo = await Image.findById(id).lean();
     return imageinfo;
-},
-//이름으로 이미지 조회
-async getImageByName(name) {
-  const imageinfo1 = await Image.findOne({ name: name });
-  return imageinfo1;
-}
+  },
+  //이름으로 이미지 조회
+  async getImageByName(name) {
+    const imageinfo1 = await Image.findOne({ name: name });
+    return imageinfo1;
+  },
 };
-
-
-
 
 module.exports = imageRepository;

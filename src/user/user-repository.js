@@ -27,35 +27,35 @@ class UserRepository {
     }
   }
   //일반 회원가입
-  async createUser(data){ 
-      const { email , password } = data; 
-      const user = await User.create({
-        email,
-        password,
-        name:null,
-        nickname:null,
-        phone:null,
-        tag: null,
-        tag_img: null,
-        is_admin: false, 
-        complaint: 0,
-        deleted_at: null
-      });
-      await user.save();
+  async createUser(data) {
+    const { email, password } = data;
+    const user = await User.create({
+      email,
+      password,
+      name: null,
+      nickname: null,
+      phone: null,
+      tag: null,
+      tag_img: null,
+      is_admin: false,
+      complaint: 0,
+      deleted_at: null,
+    });
+    await user.save();
 
-      return user.toObject();
-    }
+    return user.toObject();
+  }
 
-  //카카오 회원가입 
+  //카카오 회원가입
   async createUserForKakao(data) {
     try {
       const { email } = data; // data 객체에서 필요한 속성 추출
       const newUser = await User.create({
         email,
-        password:null,
-        name:null,
-        nickname:null,
-        phone:null,
+        password: null,
+        name: null,
+        nickname: null,
+        phone: null,
         tag: null,
         tag_img: null,
         is_admin: false, // 기본값 설정
@@ -69,13 +69,17 @@ class UserRepository {
   }
 
   //회원 정보 수정
-  async updateByEmail(email, { nickname, tag ,tagImg }) {
+  async updateByEmail(email, { nickname, tag, tagImg }) {
     try {
-      const updatedUser = await User.findOneAndUpdate({ email } , { nickname, tag , tag_img: tagImg }, {
-        new: true,
-      },
-    ).populate('tag_img')
-    .lean();
+      const updatedUser = await User.findOneAndUpdate(
+        { email },
+        { nickname, tag, tag_img: tagImg },
+        {
+          new: true,
+        },
+      )
+        .populate('tag_img')
+        .lean();
       return updatedUser;
     } catch (error) {
       throw new Error(error);
@@ -97,31 +101,29 @@ class UserRepository {
       throw new Error(error);
     }
   }
-// 리뷰 아이디로부터 사용자의 ID 가져오기
-async getUserIdByReviewId(reviewId) {
-  try {
-    const review = await Review.findById(  {_id: reviewId} );
-    return review.user_id;
-  } catch (error) {
-    throw new Error(error);
+  // 리뷰 아이디로부터 사용자의 ID 가져오기
+  async getUserIdByReviewId(reviewId) {
+    try {
+      const review = await Review.findById({ _id: reviewId });
+      return review.user_id;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
-}
 
-async incrementComplaintById(userId) {
-  try {
-    const patchedUserComplaint = await User.findByIdAndUpdate(
-      userId,
-      { $inc: { complaint: 1 } }, 
-      { new: true, lean: true });
- 
-    return patchedUserComplaint;
-  } catch (error) {
-    throw new Error(error);
+  async incrementComplaintById(userId) {
+    try {
+      const patchedUserComplaint = await User.findByIdAndUpdate(
+        userId,
+        { $inc: { complaint: 1 } },
+        { new: true, lean: true },
+      );
+
+      return patchedUserComplaint;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
-}
-
-
-
 
   //관리자 모든 회원 정보 조회
   async allUsers() {
