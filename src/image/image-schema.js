@@ -21,7 +21,7 @@ const imageSchema = new mongoose.Schema(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 const Image = mongoose.model('Image', imageSchema);

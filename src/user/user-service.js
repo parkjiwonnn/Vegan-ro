@@ -4,7 +4,7 @@ const commonErrors = require('../errors/commonErrors');
 const imageRepository = require('../image/image-repository.js');
 const config = require('../config');
 const jwt = require('jsonwebtoken');
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 const axios = require('axios');
 
 const JWT_SECRET = config.JWT_SECRET;
@@ -12,16 +12,13 @@ const JWT_SECRET = config.JWT_SECRET;
 const KAKAO_ID = config.clientID;
 const KAKAO_URL = config.callbackURL;
 
-
 class UserService {
-
-
   // 카카오로부터 사용자 정보를 가져오고 토큰을 생성하는 함수
   async handleKakaoLogin(code) {
     try {
       // 카카오로부터 사용자 정보를 가져옴
       const kakaoUserInfo = await this.requestUserInfoFromKakao(code);
-  
+
       // 카카오 사용자 정보를 기반으로 토큰을 생성
       const token = await this.generateTokenFromKakaoUserInfo(kakaoUserInfo);
       return token;
@@ -29,8 +26,8 @@ class UserService {
       console.error('Error processing Kakao login:', error);
       throw new Error('Internal Server Error');
     }
-  };
-  
+  }
+
   // 카카오로부터 사용자 정보를 가져오는 함수
   async requestUserInfoFromKakao(code) {
     try {
@@ -40,19 +37,26 @@ class UserService {
       params.append('client_id', KAKAO_ID); // 카카오 앱의 클라이언트 ID
       params.append('redirect_uri', KAKAO_URL);
       params.append('code', code);
-  
-      const response = await axios.post('https://kauth.kakao.com/oauth/token', params.toString(), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // 요청 헤더에 콘텐츠 타입 명시
+
+      const response = await axios.post(
+        'https://kauth.kakao.com/oauth/token',
+        params.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded', // 요청 헤더에 콘텐츠 타입 명시
+          },
         },
-      });
+      );
       const accessToken = response.data.access_token;
-  
-      const userInfoResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+
+      const userInfoResponse = await axios.get(
+        'https://kapi.kakao.com/v2/user/me',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      });
+      );
       return userInfoResponse.data;
     } catch (error) {
       console.error(`Error: ${error.message}`);
@@ -63,8 +67,8 @@ class UserService {
       }
       throw new Error('카카오 사용자 정보를 가져오는 중 에러 발생');
     }
-  };
-  
+  }
+
   // 카카오 사용자 정보를 기반으로 토큰을 생성하는 함수
   async generateTokenFromKakaoUserInfo(kakaoUserInfo) {
     try {
@@ -77,12 +81,12 @@ class UserService {
           {
             userId: exUser._id,
             email: exUser.email,
-            isAdmin: exUser.is_admin
+            isAdmin: exUser.is_admin,
           },
           JWT_SECRET,
-           {
-                expiresIn: '6h',
-              },
+          {
+            expiresIn: '6h',
+          },
         );
         return token;
       }
@@ -90,17 +94,17 @@ class UserService {
       const newUser = await userRepository.createUserForKakao({
         email: kakaoUserInfo.kakao_account.email,
       });
-  
+
       const token = jwt.sign(
         {
           userId: newUser._id,
           email: newUser.email,
-          isAdmin: newUser.is_admin
+          isAdmin: newUser.is_admin,
         },
         JWT_SECRET,
-         {
-                expiresIn: '6h',
-              },
+        {
+          expiresIn: '6h',
+        },
       );
       console.log('Generated token:', token);
       return token;
@@ -108,21 +112,27 @@ class UserService {
       console.error('Error generating token from Kakao user info:', error);
       throw new Error('토큰 생성 중 에러 발생');
     }
-  };
-
-// 회원 가입
-async signUp({ email,plainPassword }) {
-  //이메일로 기존 유저 여부
-  const existingUser = await userRepository.findByEmail(email);
-  if (existingUser !== null) {
-    throw new AppError(commonErrors.inputError, "중복 된 이메일 입니다.", 400);
   }
-  const hashedPassword = await bcrypt.hash(plainPassword, 8);
-  const newUser = await userRepository.createUser({email,password: hashedPassword});
 
-  return { message: "회원가입이 성공적으로 완료되었습니다.", newUser };
-}
+  // 회원 가입
+  async signUp({ email, plainPassword }) {
+    //이메일로 기존 유저 여부
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser !== null) {
+      throw new AppError(
+        commonErrors.inputError,
+        '중복 된 이메일 입니다.',
+        400,
+      );
+    }
+    const hashedPassword = await bcrypt.hash(plainPassword, 8);
+    const newUser = await userRepository.createUser({
+      email,
+      password: hashedPassword,
+    });
 
+    return { message: '회원가입이 성공적으로 완료되었습니다.', newUser };
+  }
 
   //로그인
   async signIn({ email, plainPassword }) {
@@ -130,7 +140,7 @@ async signUp({ email,plainPassword }) {
     if (user === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
-        '이메일 또는 비밀번호를 다시 확인해주세요', 
+        '이메일 또는 비밀번호를 다시 확인해주세요',
         400,
       );
     }
@@ -138,14 +148,14 @@ async signUp({ email,plainPassword }) {
     if (!isPasswordValid) {
       throw new AppError(
         commonErrors.inputError,
-        "이메일 또는 비밀번호를 다시 확인해주세요",
+        '이메일 또는 비밀번호를 다시 확인해주세요',
         400,
       );
     }
     const tokenPayload = {
       userId: user._id,
       email: user.email,
-      isAdmin: user.is_admin
+      isAdmin: user.is_admin,
     };
 
     const encodedToken = await new Promise((resolve, reject) => {
@@ -211,10 +221,11 @@ async signUp({ email,plainPassword }) {
     return { message: '회원정보가 성공적으로 삭제되었습니다.', patchedUser };
   }
 
- // 리뷰 작성자의 신고 카운트 증가
- async incrementComplaintByReviewId(reviewId) {
+  // 리뷰 작성자의 신고 카운트 증가
+  async incrementComplaintByReviewId(reviewId) {
     const userId = await userRepository.getUserIdByReviewId(reviewId);
-    const patchedUserComplaint = await userRepository.incrementComplaintById(userId);
+    const patchedUserComplaint =
+      await userRepository.incrementComplaintById(userId);
     if (!patchedUserComplaint) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -222,8 +233,11 @@ async signUp({ email,plainPassword }) {
         404,
       );
     }
-    return { message: '리뷰 신고가 성공적으로 완료되었습니다.', patchedUserComplaint};
-  } 
+    return {
+      message: '리뷰 신고가 성공적으로 완료되었습니다.',
+      patchedUserComplaint,
+    };
+  }
 
   // 관리자 모든 회원 정보 조회
 
@@ -232,19 +246,18 @@ async signUp({ email,plainPassword }) {
     if (!users.length === 0) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
-        "회원목록이 존재하지 않습니다.",
+        '회원목록이 존재하지 않습니다.',
         404,
       );
     }
     return users;
   }
-  
 
   // 관리자 회원 정보 삭제
   async deleteUser(id) {
     const deletedUser = await userRepository.deleteById(id);
 
-    if (deletedUser=== null) {
+    if (deletedUser === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 회원이 존재하지 않습니다',

@@ -2,8 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const config = require('./config');
-const passport = require('passport');
-const passportConfig = require('./passport');
 const errorHandlerMiddleware = require('../src/middleware/errorhandler-middleware');
 const path = require('path');
 require('dotenv').config();

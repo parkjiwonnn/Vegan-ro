@@ -1,7 +1,6 @@
 const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
 const UserRepository = require('../user/user-repository');
-const errors = require('../errors/responseFormat');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
@@ -31,7 +30,7 @@ module.exports = () => {
               {
                 userId: exUser._id,
                 email: exUser.email,
-                isAdmin: exUser.is_admin
+                isAdmin: exUser.is_admin,
               },
               JWT_SECRET,
               // {
@@ -49,7 +48,7 @@ module.exports = () => {
             {
               userId: newUser._id,
               email: newUser.email,
-              isAdmin: newUser.is_admin
+              isAdmin: newUser.is_admin,
             },
             JWT_SECRET,
             // {

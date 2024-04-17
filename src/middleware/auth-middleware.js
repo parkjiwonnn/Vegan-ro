@@ -33,7 +33,7 @@ const isAuthenticated = (req, res, next) => {
         .json(errors.buildResponse({ message: '토큰 인증에 실패했습니다.' }));
     }
 
-    req.user = decoded;  // 요청 객체에 사용자 정보 추가
+    req.user = decoded; // 요청 객체에 사용자 정보 추가
     next();
   });
 };
@@ -52,7 +52,6 @@ const isAdmin = (req, res, next) => {
   }
   next();
 };
-
 
 module.exports = {
   isAdmin,
