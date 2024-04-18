@@ -33,14 +33,16 @@ const reviewRepository = {
     if (Object.keys(query).length === 0) {
       reviews = await Review.find()
         .sort({ createdAt: -1 })
-        .populate('user_id')
+        .populate({ path: 'place_id', select: '_id name address' })
+        .populate({ path: 'user_id', select: '_id nickname tag' })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .exec();
     } else {
       reviews = await Review.find(query)
         .sort({ createdAt: -1 })
-        .populate('user_id')
+        .populate({ path: 'place_id', select: '_id name address' })
+        .populate({ path: 'user_id', select: '_id nickname tag' })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .exec();

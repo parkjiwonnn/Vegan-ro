@@ -6,12 +6,13 @@ const bookmarkController = {
   async getBookmarksByUserId(req, res, next) {
     try {
       const { pageNumber, pageSize } = req.query;
-      const bookmarks = await bookmarkService.getBookmarksByUserId(
-        req.user.userId,
-        pageNumber,
-        pageSize,
-      );
-      res.json(responseFormat.buildResponse(bookmarks));
+      const { bookmarks, totalCount } =
+        await bookmarkService.getBookmarksByUserId(
+          req.user.userId,
+          pageNumber,
+          pageSize,
+        );
+      res.json(responseFormat.buildResponse({ bookmarks, totalCount }));
     } catch (error) {
       next(error);
     }

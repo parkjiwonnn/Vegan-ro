@@ -5,12 +5,13 @@ const commonErrors = require('../errors/commonErrors.js');
 class BookmarkService {
   // 북마크 전체 조회 (유저)
   async getBookmarksByUserId(userId, pageNumber, pageSize) {
-    const bookmarks = await bookmarkRepository.getBookmarksByUserId(
-      userId,
-      pageNumber,
-      pageSize,
-    );
-    return bookmarks;
+    const { bookmarks, totalCount } =
+      await bookmarkRepository.getBookmarksByUserId(
+        userId,
+        pageNumber,
+        pageSize,
+      );
+    return { bookmarks, totalCount };
   }
 
   // 북마크 추가 (유저)
