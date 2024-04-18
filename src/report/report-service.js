@@ -58,12 +58,13 @@ const reportedPlaceService = {
   },
   // 조건을 만족하는 장소 모두 가져오기
   async getReportedPlaces(pageNumber, pageSize, userId) {
-    const reportedPlaces = await reportedPlaceRepository.findReportedPlaces(
-      pageNumber,
-      pageSize,
-      userId,
-    );
-    return reportedPlaces;
+    const { reportedPlaces, totalCount } =
+      await reportedPlaceRepository.findReportedPlaces(
+        pageNumber,
+        pageSize,
+        userId,
+      );
+    return { reportedPlaces, totalCount };
   },
   // 특정 id를 가진 장소 내용 수정
   async updateReportedPlace(

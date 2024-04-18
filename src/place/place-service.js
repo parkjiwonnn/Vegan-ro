@@ -132,16 +132,14 @@ const placeService = {
   },
   // 특정 id를 가진 장소 삭제
   async deletePlace(id) {
-    // id가 deleted_at이 null이고, 존재하는 id인지 확인
-    const existingPlace = await placeRepository.findPlaceById(id);
-    if (!existingPlace) {
+    const deletedPlace = await placeRepository.deletePlace(id);
+    if (!deletedPlace) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
         400,
       );
     }
-    const deletedPlace = await placeRepository.deletePlace(id);
     return { message: '정상적으로 삭제되었습니다.', deletedPlace };
   },
   // 특정 id를 가진 장소 삭제 날짜 표시

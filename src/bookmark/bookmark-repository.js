@@ -15,7 +15,9 @@ class BookmarkRepository {
             model: 'Image',
           },
         });
-      return bookmarks;
+
+      const totalCount = await Bookmark.countDocuments({ user_id: userId });
+      return { bookmarks, totalCount };
     } catch (error) {
       throw new Error(error);
     }
