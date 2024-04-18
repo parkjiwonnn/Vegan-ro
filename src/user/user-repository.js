@@ -10,11 +10,14 @@ class UserRepository {
       throw new Error(error);
     }
   }
+
+  //회원 정보 조회
   async findByEmail(email) {
-    const users = await User.find({ email }).lean();
+    const users = await User.find({ email }).populate('tag_img').lean();
     if (users.length === 0) {
       return null;
     }
+    
     return users[0];
   }
 
