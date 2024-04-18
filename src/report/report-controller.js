@@ -31,12 +31,13 @@ const reportedPlaceController = {
     try {
       const { pageNumber, pageSize } = req.query;
       const userId = req.user.userId;
-      const reportedPlaces = await reportedPlaceService.getReportedPlaces(
-        pageNumber,
-        pageSize,
-        userId,
-      );
-      res.json(responseFormat.buildResponse(reportedPlaces));
+      const { reportedPlaces, totalCount } =
+        await reportedPlaceService.getReportedPlaces(
+          pageNumber,
+          pageSize,
+          userId,
+        );
+      res.json(responseFormat.buildResponse({ reportedPlaces, totalCount }));
     } catch (error) {
       next(error);
     }

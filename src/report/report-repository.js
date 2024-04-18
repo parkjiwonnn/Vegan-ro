@@ -62,7 +62,11 @@ const reportedPlaceRepository = {
         .limit(pageSize)
         .exec();
     }
-    return reportedPlaces;
+
+    // 조건에 맞는 데이터의 총 개수(페이지네이션X)
+    const totalCount = await ReportedPlace.countDocuments(query);
+
+    return { reportedPlaces, totalCount };
   },
   // 특정 id를 가진 제보 장소 내용 덮어씌우기
   async updateReportedPlace(
