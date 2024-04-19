@@ -50,7 +50,8 @@ const reportedPlaceRepository = {
     if (Object.keys(query).length === 0) {
       reportedPlaces = await ReportedPlace.find()
         .sort({ createdAt: -1 })
-        .populate(['category_img', 'user_id'])
+        .populate('category_img')
+        .populate({ path: 'user_id', select: '-is_admin -password' })
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize)
         .exec();
@@ -104,14 +105,16 @@ const reportedPlaceRepository = {
       },
       { new: true },
     )
-      .populate(['category_img', 'user_id'])
+      .populate('category_img')
+      .populate({ path: 'user_id', select: '-is_admin -password' })
       .lean();
     return updatedReportedPlace;
   },
   // 특정 id를 가진 제보 장소 삭제
   async deleteReportedPlace(id) {
     const deletedReportedPlace = await ReportedPlace.findByIdAndDelete(id)
-      .populate(['category_img', 'user_id'])
+      .populate('category_img')
+      .populate({ path: 'user_id', select: '-is_admin -password' })
       .lean();
     return deletedReportedPlace;
   },
