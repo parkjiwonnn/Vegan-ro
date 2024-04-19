@@ -215,7 +215,7 @@ async kakaoLogout(accessToken) {
   // 회원정보조회(password, isAdmin 없음)
   async getUserInfo(email) {
     const userInfo = await userRepository.findByEmail(email);
-    const { password, isAdmin, ...userInfoWithoutSensitive } = userInfo;
+    const { password, is_admin, ...userInfoWithoutSensitive } = userInfo;
     return userInfoWithoutSensitive;
   }
 
