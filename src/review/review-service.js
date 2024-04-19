@@ -6,6 +6,14 @@ const placeRepository = require('../place/place-repository.js');
 const reviewService = {
   // 새로운 리뷰 등록
   async createReview({ placeId, content, userId }) {
+    const existingPlace = await placeRepository.findPlaceById(placeId);
+    if (!existingPlace) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 id를 갖는 장소가 없습니다.',
+        400,
+      );
+    }
     const newReview = await reviewRepository.createReview({
       placeId,
       content,
@@ -23,7 +31,7 @@ const reviewService = {
   // 조건에 맞는 리뷰 모두 가져오기
   async getReviews(pageNumber, pageSize, placeId, userId) {
     const existingPlace = await placeRepository.findPlaceById(placeId);
-    if (!existingPlace) {
+    if (placeId && !existingPlace) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
