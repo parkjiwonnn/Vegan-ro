@@ -4,42 +4,49 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: false,
+      required: true,
     },
     password: {
       type: String,
-      required: false,
+      default: null,
     },
     name: {
       type: String,
-      required: false,
+      default: null,
     },
     nickname: {
       type: String,
-      required: false,
+      default: null,
+      unique: true,
     },
     phone: {
       type: String,
-      required: false,
+      default: null,
     },
     tag: {
       type: String,
-      required: false,
+      default: null,
     },
-    img: {
+    tag_img: {
       type: mongoose.Types.ObjectId,
       ref: 'Image',
-      required: false,
+      default: null,
+    },
+    complaint: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     is_admin: {
       type: Boolean,
+      default: false,
     },
     deleted_at: {
       type: Date,
+      default: null,
     },
   },
   {
-    collection: 'User',
     timestamps: true,
     versionKey: false,
   },

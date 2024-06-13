@@ -2,8 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const config = require('./config');
-const passport = require('passport');
-const passportConfig = require('./passport');
+const errorHandlerMiddleware = require('../src/middleware/errorhandler-middleware');
 const path = require('path');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
@@ -11,12 +10,14 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ['http://localhost:3000'],
-    credentials: true,
-  }),
-);
+app.use(cors());
+
+// app.use(
+//   cors({
+//     origin: ['https://veganro-backend.vercel.app', 'http://localhost:4000','https://veganro-frontend.vercel.app'],
+//     credentials: true,
+//   }),
+// );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,27 +39,22 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-const viewRouter = require('./views/view-router');
-app.use('/', viewRouter); // viewRouter 미들웨어 등록
-
-app.use(viewRouter);
-
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+app.get('/auth/kakao/callback', (req, res) => {
+  res.send('사용자 인증!');
 });
 
 app.get('/api', (req, res) => {
   res.send('백엔드 api 서버');
 });
 
-passportConfig(passport);
+const apiRouter = require('./router/index');
 
-const userRouter = require('./user/user-router');
+app.use('/api', apiRouter);
 
-app.use('/auth', userRouter);
+app.use(errorHandlerMiddleware);
 
 //connect to mongodb
 const MONGO_URI = config.mongoDBUri;

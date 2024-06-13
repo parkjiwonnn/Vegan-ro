@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 
-const reviewSchema = new mongoose.Schema(
+const bookmarkSchema = new mongoose.Schema(
   {
     place_id: {
       type: mongoose.Types.ObjectId,
       ref: 'Place',
-      required: true,
-    },
-    content: {
-      type: String,
       required: true,
     },
     user_id: {
@@ -22,7 +18,6 @@ const reviewSchema = new mongoose.Schema(
     versionKey: false,
   },
 );
+const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
 
-const Review = mongoose.model('Review', reviewSchema);
-
-module.exports = Review;
+module.exports = Bookmark;

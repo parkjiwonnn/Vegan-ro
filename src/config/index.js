@@ -25,4 +25,8 @@ module.exports = {
   clientID: process.env.KAKAO_ID, // 카카오 로그인에서 발급받은 REST API 키
 
   callbackURL: process.env.KAKAO_URL, // 카카오 로그인 Redirect URI 경로
+
+  REDIRECT_URL: process.env.REDIRECT_URL,
+
+  JWT_SECRET: process.env.JWT_SECRET,
 };

@@ -1,32 +1,41 @@
 const placeRepository = require('./place-repository.js');
 const AppError = require('../errors/AppError.js');
 const commonErrors = require('../errors/commonErrors.js');
+const imageRepository = require('../image/image-repository.js');
 
 const placeService = {
   // 새로운 장소 등록
   async createPlace({
     name,
     category,
-    vegan_option,
+    veganOption,
     tel,
     address,
-    address_detail,
+    addressLotNumber,
+    addressDetail,
     location,
-    open_times,
-    sns_url,
+    openTimes,
+    snsUrl,
   }) {
     // category_img 이미지 컬렉션에서 가져오기
+    const categoryImg = await imageRepository.getImageByName(category);
+    // location GeoJSON 객체로 저장
+    const newLocation = {
+      type: 'Point',
+      coordinates: location,
+    };
     const newPlace = await placeRepository.createPlace({
       name,
       category,
-      // category_img,
-      vegan_option,
+      categoryImg,
+      veganOption,
       tel,
       address,
-      address_detail,
-      location,
-      open_times,
-      sns_url,
+      addressLotNumber,
+      addressDetail,
+      location: newLocation,
+      openTimes,
+      snsUrl,
     });
     if (newPlace === null) {
       throw new AppError(
@@ -38,50 +47,45 @@ const placeService = {
     return { message: '정상적으로 등록되었습니다.', newPlace };
   },
   // 특정 id를 가진 장소 가져오기
-  async getPlace(id) {
-    const place = await placeRepository.findPlaceById(id);
+  async getPlace(placeId) {
+    const place = await placeRepository.findPlaceById(placeId);
     if (place === null) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
-    // 현재 위치와의 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 req.body 가져오기
+
     return place;
   },
   // 검색어를 만족하는 장소 모두 가져오기
-  async getPlacesByKeyword(query) {
-    const places = await placeRepository.findPlacesByKeyword(query);
-    if (places.length === 0) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 검색어를 만족하는 장소가 존재하지 않습니다',
-        404,
-      );
-    }
-    // 현재 위치와의 각 장소 별로 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 center값 가져오기
+  async getPlacesByKeyword(query, pageNumber, pageSize) {
+    const places = await placeRepository.findPlacesByKeyword(
+      query,
+      pageNumber,
+      pageSize,
+    );
     return places;
   },
   // 조건을 만족하는 장소 모두 가져오기
-  async getPlaces(center, radius, category) {
-    const centerArray = center.split(',').map(Number);
-    const places = await placeRepository.findPlaces(
-      centerArray,
-      radius,
-      category,
-    );
-    if (places.length === 0) {
+  async getPlaces(center, radius, pageNumber, pageSize, category, veganOption) {
+    if ((center && !radius) || (!center && radius)) {
       throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당 조건을 만족하는 장소가 존재하지 않습니다',
-        404,
+        commonErrors.invalidRequestError,
+        '거리 검색을 위해서는 center와 radius 모두 필요합니다',
+        400,
       );
     }
-    // 현재 위치와의 각 장소 별로 거리 계산 결과 같이 반환하기
-    // 현재 위치 : controller에서 가져온 center 사용
+
+    const places = await placeRepository.findPlaces(
+      center,
+      radius,
+      pageNumber,
+      pageSize,
+      category,
+      veganOption,
+    );
     return places;
   },
   // 특정 id를 가진 장소 내용 수정
@@ -90,48 +94,65 @@ const placeService = {
     {
       name,
       category,
-      category_img,
-      vegan_option,
+      veganOption,
       tel,
       address,
-      address_detail,
+      addressLotNumber,
+      addressDetail,
       location,
-      open_times,
-      sns_url,
+      openTimes,
+      snsUrl,
     },
   ) {
-    const updatedPlace = await placeRepository.updatePlace(id, {
-      name,
-      category,
-      category_img,
-      vegan_option,
-      tel,
-      address,
-      address_detail,
-      location,
-      open_times,
-      sns_url,
-    });
-    if (updatedPlace === null) {
+    // id가 deleted_at이 null이고, 존재하는 id인지 확인
+    const existingPlace = await placeRepository.findPlaceById(id);
+    if (!existingPlace) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
+    // category_img 이미지 컬렉션에서 가져오기
+    const categoryImg = await imageRepository.getImageByName(category);
+    const updatedPlace = await placeRepository.updatePlace(id, {
+      name,
+      category,
+      categoryImg,
+      veganOption,
+      tel,
+      address,
+      addressLotNumber,
+      addressDetail,
+      location,
+      openTimes,
+      snsUrl,
+    });
     return { message: '정상적으로 수정되었습니다.', updatedPlace };
   },
   // 특정 id를 가진 장소 삭제
   async deletePlace(id) {
     const deletedPlace = await placeRepository.deletePlace(id);
-    if (deletedPlace === null) {
+    if (!deletedPlace) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당 id를 갖는 장소가 없습니다.',
-        404,
+        400,
       );
     }
     return { message: '정상적으로 삭제되었습니다.', deletedPlace };
+  },
+  // 특정 id를 가진 장소 삭제 날짜 표시
+  async updateDeletedAt(id) {
+    const updatedPlace = await placeRepository.updateDeletedAt(id);
+    if (updatedPlace === null) {
+      throw new AppError(
+        commonErrors.resourceNotFoundError,
+        '해당 id를 갖는 장소가 없습니다.',
+        400,
+      );
+    }
+    return { message: '정상적으로 삭제되었습니다.', updatedPlace };
   },
 };
 
